@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MortgageCalculator.Core.Config;
+using MortgageCalculator.Core.Interfaces;
+using MortgageCalculator.Core.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ builder.Services.AddTransient<IMongoDatabase>(s =>
     return client.GetDatabase(databaseName);
 });
 
+builder.Services.AddTransient<ISeedRepositoryData, SeedRepositoryData>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -38,5 +42,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+var seeder = app.Services.GetService<ISeedRepositoryData>()
+    ?? throw new InvalidOperationException($"The dependency '{nameof(ISeedRepositoryData)}' has not been set up.");
+await seeder.SeedData();
 
 app.Run();

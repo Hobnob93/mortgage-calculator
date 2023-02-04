@@ -2,8 +2,8 @@
 
 public record Mortgage : DocumentBase
 {
-    public string Name { get; set; } = string.Empty;
-    public string Provider { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Provider { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public DateOnly FixedTermEndDate { get; set; }

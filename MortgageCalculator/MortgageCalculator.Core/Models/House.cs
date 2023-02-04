@@ -2,10 +2,10 @@
 
 public record House : DocumentBase
 {
-    public string Address1 { get; set; } = string.Empty;
-    public string Address2 { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string Postcode { get; set; } = string.Empty;
+    public required string Address1 { get; init; }
+    public required string Address2 { get; init; }
+    public required string City { get; init; }
+    public required string Postcode { get; init; }
     public decimal PurchasedValue { get; set; }
     public decimal EstimatedValue { get; set; }
 }

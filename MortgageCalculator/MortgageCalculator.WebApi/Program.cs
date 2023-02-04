@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using MortgageCalculator.Core.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +8,18 @@ var config = builder.Configuration;
 builder.Services.Configure<ConnectionStringsConfig>(config.GetSection(ConnectionStringsConfig.Section));
 builder.Services.Configure<DatabaseNamesConfig>(config.GetSection(DatabaseNamesConfig.Section));
 builder.Services.Configure<CollectionNamesConfig>(config.GetSection(CollectionNamesConfig.Section));
+
+builder.Services.AddTransient<IMongoDatabase>(s =>
+{
+    var connString = s.GetService<IOptions<ConnectionStringsConfig>>()?.Value.Local
+        ?? throw new InvalidDataException($"Connection String '{nameof(ConnectionStringsConfig.Local)}' has not been provided in appsettings.");
+
+    var client = new MongoClient(connString);
+    var databaseName = s.GetService<IOptions<DatabaseNamesConfig>>()?.Value.Mortgage
+        ?? throw new InvalidDataException($"Database Name '{nameof(DatabaseNamesConfig.Mortgage)}' has not been provided in appsettings.");
+
+    return client.GetDatabase(databaseName);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,9 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

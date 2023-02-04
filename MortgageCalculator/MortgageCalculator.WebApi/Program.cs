@@ -1,6 +1,11 @@
+using MortgageCalculator.Core.Config;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var config = builder.Configuration;
+builder.Services.Configure<ConnectionStringsConfig>(config.GetSection(ConnectionStringsConfig.Section));
+builder.Services.Configure<DatabaseNamesConfig>(config.GetSection(DatabaseNamesConfig.Section));
+builder.Services.Configure<CollectionNamesConfig>(config.GetSection(CollectionNamesConfig.Section));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

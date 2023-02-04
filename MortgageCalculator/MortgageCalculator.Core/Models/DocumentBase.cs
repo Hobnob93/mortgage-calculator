@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MortgageCalculator.Core.Models;
 
-public class DocumentBase
+public record DocumentBase
 {
     [BsonId, BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; }

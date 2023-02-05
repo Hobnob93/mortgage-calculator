@@ -3,6 +3,6 @@
 public record MortgagePaymentTo : DocumentBase
 {
     public required string Provider { get; init; }
-    public DateOnly StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public required DateOnly StartDate { get; init; }
+    public required DateOnly EndDate { get; init; }
 }

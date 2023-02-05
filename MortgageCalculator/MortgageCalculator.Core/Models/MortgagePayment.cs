@@ -6,5 +6,5 @@ public record MortgagePayment : DocumentBase
     public DateOnly PaidOn { get; set; }
     public required MortgagePaymentTo PaidTo { get; init; }
     public bool IsOverPayment { get; set; }
-    public required Owner Owner { get; set; }
+    public Owner? Owner { get; set; }
 }

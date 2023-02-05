@@ -40,6 +40,12 @@ public class MongoRepositoryBase
         await collection.InsertOneAsync(newDocument);
     }
 
+    protected async Task CreateDocumentsInCollection<T>(string collectionName, params T[] newDocuments) where T : DocumentBase
+    {
+        var collection = _mongoDatabase.GetCollection<T>(collectionName);
+        await collection.InsertManyAsync(newDocuments);
+    }
+
     protected async Task UpdateDocumentInCollection<T>(string collectionName, T updatedDocument) where T : DocumentBase
     {
         var collection = _mongoDatabase.GetCollection<T>(collectionName);

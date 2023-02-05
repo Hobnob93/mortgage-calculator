@@ -11,6 +11,7 @@ public record Mortgage : DocumentBase
     public int FixedTermLength { get; set; }
     public bool HasRemortgaged { get; set; }
     public double InterestRate { get; set; }
+    public decimal AmountBorrowed { get; set; }
     public decimal MonthlyPayment { get; set; }
     public House? House { get; set; }
 }

@@ -52,7 +52,7 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             City = "Bristol",
             Postcode = "BS34 8XT",
             PurchasedValue = 262500m,
-            EstimatedValue = 301000m
+            EstimatedValue = 269240m
         });
     }
 
@@ -80,11 +80,9 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             AmountBorrowed = 250373m,
             InterestRate = 3.73,
             StartDate = new DateOnly(2021, 9, 30),
-            EndDate = new DateOnly(2056, 6, 30),
             FullTermLength = 35,
             FixedTermEndDate = new DateOnly(2023, 8, 30),
             FixedTermLength = 2,
-            HasRemortgaged = false,
             MonthlyPayment = 1060.85m
         });
     }
@@ -100,9 +98,12 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             {
                 Provider = mortgage.Provider,
                 StartDate = mortgage.StartDate,
-                EndDate = mortgage.EndDate
+                FixedTermEndDate = mortgage.FixedTermEndDate
             }
         };
+
+        var ownerKyle = await GetSingleFromCollection<Owner>(_collectionNames.Owners, o => o.FirstName == "Kyle");
+        var ownerAmber = await GetSingleFromCollection<Owner>(_collectionNames.Owners, o => o.FirstName == "Amber");
 
         await CreateDocumentsInCollection(_collectionNames.MortgagePayments, mortgagePaymentTemplate with
         {
@@ -122,19 +123,54 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             PaidOn = new DateOnly(2022, 2, 1)
         }, mortgagePaymentTemplate with
         {
+            PaidOn = new DateOnly(2022, 2, 11),
+            Amount = 200m,
+            Owner = ownerKyle,
+        }, mortgagePaymentTemplate with
+        {
+            PaidOn = new DateOnly(2022, 2, 28),
+            Amount = 100m,
+            Owner = ownerAmber,
+        }, mortgagePaymentTemplate with
+        {
             PaidOn = new DateOnly(2022, 3, 1)
+        }, mortgagePaymentTemplate with
+        {
+            PaidOn = new DateOnly(2022, 3, 23),
+            Amount = 100m,
+            Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
             PaidOn = new DateOnly(2022, 4, 1)
         }, mortgagePaymentTemplate with
         {
+            PaidOn = new DateOnly(2022, 4, 25),
+            Amount = 100m,
+            Owner = ownerAmber,
+        }, mortgagePaymentTemplate with
+        {
             PaidOn = new DateOnly(2022, 5, 1)
+        }, mortgagePaymentTemplate with
+        {
+            PaidOn = new DateOnly(2022, 5, 23),
+            Amount = 100m,
+            Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
             PaidOn = new DateOnly(2022, 6, 1)
         }, mortgagePaymentTemplate with
         {
+            PaidOn = new DateOnly(2022, 6, 23),
+            Amount = 100m,
+            Owner = ownerAmber,
+        }, mortgagePaymentTemplate with
+        {
             PaidOn = new DateOnly(2022, 7, 1)
+        }, mortgagePaymentTemplate with
+        {
+            PaidOn = new DateOnly(2022, 7, 22),
+            Amount = 100m,
+            Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
             PaidOn = new DateOnly(2022, 8, 1)

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageCalculator", "MortgageCalculator\MortgageCalculator.csproj", "{C5F22B3B-4462-476A-89B4-8CAF66FAC0EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MortgageCalculator", "MortgageCalculator\MortgageCalculator.csproj", "{C5F22B3B-4462-476A-89B4-8CAF66FAC0EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageCalculator.Components", "MortgageCalculator.Components\MortgageCalculator.Components.csproj", "{89624FEA-8CEE-4B49-9721-529BB96FD50F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MortgageCalculator.Components", "MortgageCalculator.Components\MortgageCalculator.Components.csproj", "{89624FEA-8CEE-4B49-9721-529BB96FD50F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageCalculator.Core", "MortgageCalculator.Core\MortgageCalculator.Core.csproj", "{7411C0AE-E8EC-4118-A308-27EC435B9DD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MortgageCalculator.Core", "MortgageCalculator.Core\MortgageCalculator.Core.csproj", "{7411C0AE-E8EC-4118-A308-27EC435B9DD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageCalculator.WebApi", "MortgageCalculator.WebApi\MortgageCalculator.WebApi.csproj", "{618CF9F0-8C6E-453A-B383-B0502D3AC04D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MortgageCalculator.WebApi", "MortgageCalculator.WebApi\MortgageCalculator.WebApi.csproj", "{618CF9F0-8C6E-453A-B383-B0502D3AC04D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageCalculator.Tests", "MortgageCalculator.Tests\MortgageCalculator.Tests.csproj", "{61E52A12-E9A4-422D-924C-F4163DED7004}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MortgageCalculator.Tests", "MortgageCalculator.Tests\MortgageCalculator.Tests.csproj", "{61E52A12-E9A4-422D-924C-F4163DED7004}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

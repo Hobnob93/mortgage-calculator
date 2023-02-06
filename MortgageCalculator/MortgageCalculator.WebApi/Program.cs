@@ -24,6 +24,7 @@ builder.Services.AddTransient<IMongoDatabase>(s =>
 });
 
 builder.Services.AddTransient<ISeedRepositoryData, SeedRepositoryData>();
+builder.Services.AddTransient<IUsefulLinksRepository, UsefulLinksRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

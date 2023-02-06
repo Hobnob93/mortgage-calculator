@@ -7,9 +7,13 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">Mortgage Manager</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        <MudMenu Label="Useful Links" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomRight">
+            <MudMenuItem IconColor="Color.Info" Href="https://www.moneysavingexpert.com/mortgages/mortgages-vs-savings/" Target="_blank" Icon="@Icons.Material.Filled.Savings">Mortgage vs Savings</MudMenuItem>
+            <MudDivider DividerType="DividerType.Inset" />
+            <MudMenuItem IconColor="Color.Primary" Icon="@Icons.Material.Filled.Add">Manage Links</MudMenuItem>
+        </MudMenu>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />

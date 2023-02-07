@@ -31,7 +31,7 @@ public partial class UsefulLinksMenu : ApiComponentBase
     {
         var parameters = new DialogParameters 
         {
-            [Constants.DialogParameters.UsefulLinksList] = UsefulLinks
+            [nameof(UsefulLinkEntries.UsefulLinks)] = UsefulLinks
         };
 
         DialogService.Show<UsefulLinkEntries>("Manage & Maintain Useful Links", parameters);

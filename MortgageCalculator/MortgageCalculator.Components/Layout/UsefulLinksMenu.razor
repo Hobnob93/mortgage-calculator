@@ -1,4 +1,19 @@
 ﻿@inherits ApiComponentBase
 
-<h3>UsefulLinks</h3>
+@switch (State)
+{
+    case ApiComponentState.Loaded:
+        <MudMenu Label="Useful Links" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomRight" Dense>
+            @foreach (var link in UsefulLinks)
+            {
+                <MudMenuItem IconColor="Color.Info" Href="@link.Href" Target="_blank" Icon="@link.Icon">@link.Name</MudMenuItem>
+            }
+            <MudDivider DividerType="DividerType.Inset" />
+            <MudMenuItem IconColor="Color.Primary" Icon="@Icons.Material.Filled.Add">Manage Links</MudMenuItem>
+        </MudMenu>
+        break;
 
+    case ApiComponentState.Errored:
+        <MudMenu Label="Useful Links" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" AnchorOrigin="Origin.BottomRight" Disabled />
+        break;
+}

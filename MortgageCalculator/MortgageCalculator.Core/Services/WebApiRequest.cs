@@ -20,12 +20,12 @@ public class WebApiRequest : IWebApiRequest
     public async Task<T> GetAsync<T>(ApiEndpoint apiEndpoint, params object[] parameters)
     {
         var client = _clientFactory.CreateClient();
-        var endpoint = GetEndpoint(apiEndpoint);
+        var uri = GetEndpointUri(apiEndpoint);
 
         if (parameters is not null && parameters.Length > 0)
-            endpoint = string.Format(endpoint, parameters);
+            uri = string.Format(uri, parameters);
 
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.BaseUrl}{endpoint}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.BaseUrl}{uri}");
         var response = await client.SendAsync(request);
 
         var options = new JsonSerializerOptions
@@ -39,7 +39,7 @@ public class WebApiRequest : IWebApiRequest
             ?? throw new InvalidCastException("Could not deserialize response stream.");
     }
 
-    private string GetEndpoint(ApiEndpoint endpoint) =>
+    private string GetEndpointUri(ApiEndpoint endpoint) =>
         endpoint switch
         {
             ApiEndpoint.UsefulLinks => _config.UsefulLinks,

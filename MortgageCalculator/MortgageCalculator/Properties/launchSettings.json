@@ -2,6 +2,7 @@
   "iisSettings": {
     "iisExpress": {
       "applicationUrl": "http://localhost:61808",
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "sslPort": 44354
     }
   },

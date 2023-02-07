@@ -40,6 +40,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(opt => opt
+    .AllowAnyOrigin()
+    .WithMethods("GET", "POST", "OPTIONS")
+    .WithHeaders("Authorization", "Content-Type"));
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

@@ -2,7 +2,6 @@
 using MortgageCalculator.Core.Config;
 using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Interfaces;
-using MudBlazor;
 using System.Text.Json;
 
 namespace MortgageCalculator.Core.Services;
@@ -11,44 +10,33 @@ public class WebApiRequest : IWebApiRequest
 {
     private readonly ApiEndpointConfig _config;
     private readonly IHttpClientFactory _clientFactory;
-    private readonly ISnackbar _snackbar;
 
-    public WebApiRequest(IOptions<ApiEndpointConfig> config, IHttpClientFactory clientFactory, ISnackbar snackbar)
+    public WebApiRequest(IOptions<ApiEndpointConfig> config, IHttpClientFactory clientFactory)
     {
         _config = config.Value;
         _clientFactory = clientFactory;
-        _snackbar = snackbar;
     }
 
-    public async Task<T?> GetAsync<T>(ApiEndpoint apiEndpoint, params object[] parameters)
+    public async Task<T> GetAsync<T>(ApiEndpoint apiEndpoint, params object[] parameters)
     {
-        try
+        var client = _clientFactory.CreateClient();
+        var endpoint = GetEndpoint(apiEndpoint);
+
+        if (parameters is not null && parameters.Length > 0)
+            endpoint = string.Format(endpoint, parameters);
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.BaseUrl}{endpoint}");
+        var response = await client.SendAsync(request);
+
+        var options = new JsonSerializerOptions
         {
-            var client = _clientFactory.CreateClient();
-            var endpoint = GetEndpoint(apiEndpoint);
+            PropertyNameCaseInsensitive = true
+        };
 
-            if (parameters is not null && parameters.Length > 0)
-                endpoint = string.Format(endpoint, parameters);
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_config.BaseUrl}{endpoint}");
-            var response = await client.SendAsync(request);
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            response.EnsureSuccessStatusCode();
-            using var stream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T>(stream, options)
-                ?? throw new InvalidCastException("Could not deserialize response stream.");
-        }
-        catch (Exception ex)
-        {
-            _snackbar.Add($"Could not fetch '{apiEndpoint}' data: {ex.Message}", Severity.Error);
-
-            return default;
-        }
+        response.EnsureSuccessStatusCode();
+        using var stream = await response.Content.ReadAsStreamAsync();
+        return await JsonSerializer.DeserializeAsync<T>(stream, options)
+            ?? throw new InvalidCastException("Could not deserialize response stream.");
     }
 
     private string GetEndpoint(ApiEndpoint endpoint) =>

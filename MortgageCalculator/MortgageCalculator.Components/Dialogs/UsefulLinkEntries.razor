@@ -1,0 +1,34 @@
+﻿@using MortgageCalculator.Core.Models;
+
+<MudDialog>
+    <DialogContent>        
+        <MudTable T="UsefulLink" Items="@UsefulLinks" Hover="true" Breakpoint="Breakpoint.Sm" OnRowClick="RowClickEvent" Elevation="0">
+            <ColGroup>
+                <col style="40%"/>
+                <col style="30%"/>
+                <col style="10%" />
+                <col style="20%" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Icon Name</MudTh>
+                <MudTh>Icon</MudTh>
+                <MudTh Class="me-8" Style="text-align:right;padding-right:30px;">Link</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Icon Name">TBC</MudTd>
+                <MudTd DataLabel="Icon">
+                    <MudIcon Icon="@context.Icon"></MudIcon>
+                </MudTd>
+                <MudTd DataLabel="Link" Style="text-align:right">
+                    <MudButton Variant="Variant.Text" Href="@context.Href" Target="_blank" EndIcon="@Icons.Material.Filled.ChevronRight" IconColor="Color.Primary">Open Link</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Primary">Close</MudButton>
+    </DialogActions>
+</MudDialog>

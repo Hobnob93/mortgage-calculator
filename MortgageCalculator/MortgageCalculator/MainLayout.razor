@@ -1,14 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="true" />
-<MudDialogProvider />
+<MudDialogProvider
+    FullWidth="true"
+    MaxWidth="MaxWidth.Large"
+    CloseButton="true"
+    CloseOnEscapeKey="true"
+    Position="DialogPosition.Center"
+    DisableBackdropClick="true"
+/>
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => ToggleDrawer())" />
         <MudText Typo="Typo.h5" Class="ml-3">Mortgage Manager</MudText>
+
         <MudSpacer />
+
         <UsefulLinksMenu />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">

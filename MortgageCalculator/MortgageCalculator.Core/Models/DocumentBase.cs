@@ -5,6 +5,6 @@ namespace MortgageCalculator.Core.Models;
 
 public record DocumentBase
 {
-    [BsonId, BsonGuidRepresentation(GuidRepresentation.Standard)]
-    public Guid Id { get; init; }
+    [BsonId]
+    public string Id { get; init; } = Guid.NewGuid().ToString();
 }

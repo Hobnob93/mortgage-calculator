@@ -2,6 +2,7 @@
 using MortgageCalculator.Core.Config;
 using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Interfaces;
+using System.Text;
 using System.Text.Json;
 
 namespace MortgageCalculator.Core.Services;
@@ -37,6 +38,21 @@ public class WebApiRequest : IWebApiRequest
         using var stream = await response.Content.ReadAsStreamAsync();
         return await JsonSerializer.DeserializeAsync<T>(stream, options)
             ?? throw new InvalidCastException("Could not deserialize response stream.");
+    }
+
+    public async Task PatchAsync(ApiEndpoint apiEndpoint, object? parameter)
+    {
+        var client = _clientFactory.CreateClient();
+        var uri = GetEndpointUri(apiEndpoint);
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{_config.BaseUrl}{uri}");
+
+        if (parameter is not null)
+            request.Content = new StringContent(JsonSerializer.Serialize(parameter), Encoding.UTF8, "application/json");
+
+        var response = await client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
     }
 
     private string GetEndpointUri(ApiEndpoint endpoint) =>

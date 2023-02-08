@@ -113,90 +113,114 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
 
         await CreateDocumentsInCollection(_collectionNames.MortgagePayments, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             Amount = 1825.37m,
             PaidOn = new DateOnly(2021, 10, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2021, 11, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2021, 12, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 1, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 2, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 2, 11),
             Amount = 200m,
             Owner = ownerKyle,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 2, 28),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 3, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 3, 23),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 4, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 4, 25),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 5, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 5, 23),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 6, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 6, 23),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 7, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 7, 22),
             Amount = 100m,
             Owner = ownerAmber,
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 8, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 9, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 10, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 11, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2022, 12, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2023, 1, 1)
         }, mortgagePaymentTemplate with
         {
+            Id = Guid.NewGuid().ToString(),
             PaidOn = new DateOnly(2023, 2, 1)
         });
     }

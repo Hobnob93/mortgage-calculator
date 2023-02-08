@@ -16,8 +16,13 @@ public class UsefulLinksRepository : MongoRepositoryBase, IUsefulLinksRepository
 		_collectionNames = collectionNames.Value;
 	}
 
-	public async Task<IEnumerable<UsefulLink>> GetUsefulLinks()
+	public async Task<IEnumerable<UsefulLink>> GetLinks()
 	{
 		return await GetAllFromCollection<UsefulLink>(_collectionNames.UsefulLinks);
+	}
+
+	public async Task UpdateLink(UsefulLink link)
+	{
+		await UpdateDocumentInCollection(_collectionNames.UsefulLinks, link);
 	}
 }

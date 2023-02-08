@@ -8,17 +8,24 @@ namespace MortgageCalculator.WebApi.Controllers
     [Route("[controller]")]
     public class UsefulLinksController : ControllerBase
     {
-        private readonly IUsefulLinksRepository _mortgageRepo;
+        private readonly IUsefulLinksRepository _linkRepo;
 
         public UsefulLinksController(IUsefulLinksRepository mortgageRepo)
         {
-            _mortgageRepo = mortgageRepo;
+            _linkRepo = mortgageRepo;
         }
 
         [HttpGet(Name = "GetUsefulLinks")]
         public async Task<IEnumerable<UsefulLink>> Get()
         {
-            return await _mortgageRepo.GetUsefulLinks();
+            return await _linkRepo.GetLinks();
+        }
+
+        [HttpPatch(Name = "UpdateUsefulLink")]
+        public async Task Patch([FromBody] UsefulLink link)
+        {
+            Console.WriteLine($"ID: {link.Id}");
+            await _linkRepo.UpdateLink(link);
         }
     }
 }

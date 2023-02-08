@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MortgageCalculator.Core.Enums;
+using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Models;
 using MudBlazor;
 
@@ -12,6 +14,9 @@ public partial class UsefulLinkEntries : ComponentBase
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
+    [Inject]
+    private IWebApiRequest WebApiRequest { get; set; } = default!;
+
     [CascadingParameter]
     private MudDialogInstance Dialog { get; set; } = default!;
 
@@ -22,7 +27,7 @@ public partial class UsefulLinkEntries : ComponentBase
     {
         var parameters = new DialogParameters
         {
-            [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item
+            [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item with { Name = "Change Me" }     // Shallow copy
         };
 
         var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {tableRowClickEventArgs.Item.Name}", parameters);
@@ -30,7 +35,23 @@ public partial class UsefulLinkEntries : ComponentBase
 
         if (!result.Canceled)
         {
-            Snackbar.Add("Link Saved!", Severity.Success);
+            try
+            {
+                var resultLink = (UsefulLink)result.Data
+                ?? throw new InvalidCastException("Could not cast data result into useful link");
+
+                await WebApiRequest.PatchAsync(ApiEndpoint.UsefulLinks, resultLink);
+
+                var linkIndex = Array.FindIndex(UsefulLinks, l => l.Id == resultLink.Id);
+                UsefulLinks[linkIndex] = resultLink;
+
+                Snackbar.Add("Link Saved!", Severity.Success);
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error trying to save link: {ex.Message}");
+            }
         }
     }
 }

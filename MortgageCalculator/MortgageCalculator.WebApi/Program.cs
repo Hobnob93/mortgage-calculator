@@ -42,7 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(opt => opt
     .AllowAnyOrigin()
-    .WithMethods("GET", "POST", "OPTIONS")
+    .WithMethods("GET", "POST", "OPTIONS", "PATCH", "DELETE")
     .WithHeaders("Authorization", "Content-Type"));
 
 app.UseHttpsRedirection();

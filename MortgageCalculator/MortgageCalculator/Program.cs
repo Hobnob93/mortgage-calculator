@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MortgageCalculator;
+using MortgageCalculator.Components.Interfaces;
+using MortgageCalculator.Components.Services;
 using MortgageCalculator.Core.Config;
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Services;
@@ -20,6 +22,7 @@ builder.Services.AddMudServices(config =>
 });
 
 builder.Services.AddTransient<IWebApiRequest, WebApiRequest>();
+builder.Services.AddTransient<IIconFinder, IconFinder>();
 
 builder.Services.AddHttpClient();
 

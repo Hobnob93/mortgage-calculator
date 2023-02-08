@@ -30,7 +30,12 @@ public partial class UsefulLinkEntries : ComponentBase
             [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item with { }     // Shallow copy
         };
 
-        var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {tableRowClickEventArgs.Item.Name}", parameters);
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Medium
+        };
+
+        var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {tableRowClickEventArgs.Item.Name}", parameters, options);
         var result = await entryDialog.Result;
 
         if (!result.Canceled)

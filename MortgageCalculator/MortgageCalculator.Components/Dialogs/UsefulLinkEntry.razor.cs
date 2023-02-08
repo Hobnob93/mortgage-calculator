@@ -1,13 +1,21 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MortgageCalculator.Core.Documents;
+using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Models;
+using MortgageCalculator.Core.Services;
 using MudBlazor;
 
 namespace MortgageCalculator.Components.Dialogs;
 
 public partial class UsefulLinkEntry : ComponentBase
 {
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
+
     [CascadingParameter]
     private MudDialogInstance Dialog { get; set; } = default!;
 
@@ -38,5 +46,44 @@ public partial class UsefulLinkEntry : ComponentBase
             Icon = _model.Icon,
             IconName = _model.IconName
         }));
+    }
+
+    private async Task OnChangeIconClicked()
+    {
+        var parameters = new DialogParameters
+        {
+            [nameof(IconSelection.Model)] = new IconData
+            {
+                Icon = _model.Icon,
+                IconName = _model.IconName
+            }
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Large
+        };
+
+        var iconDialog = await DialogService.ShowAsync<IconSelection>($"Select an Icon", parameters, options);
+        var result = await iconDialog.Result;
+
+        if (!result.Canceled)
+        {
+            try
+            {
+                var resultLink = (IconData)result.Data
+                    ?? throw new InvalidCastException("Could not cast data result into icon data");
+
+                _model.Icon = resultLink.Icon;
+                _model.IconName = resultLink.IconName;
+
+                Snackbar.Add("Icon successfully changed!", Severity.Success);
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error trying to change icon: {ex.Message}");
+            }
+        }
     }
 }

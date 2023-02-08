@@ -1,0 +1,21 @@
+﻿<MudDialog>
+    <DialogContent>        
+        <MudGrid Spacing="1" Justify="Justify.Center">
+            @foreach (var icon in _selectableIcons)
+            {
+                <MudItem>
+                    <MudPaper Height="80px" Width="80px">
+                        <MudStack Justify="Justify.Center" Spacing="0">
+                            <MudText Typo="Typo.body1">@icon.IconName</MudText>
+                            <MudIcon Icon="@icon.Icon" Color="Color.Info"></MudIcon>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Error">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

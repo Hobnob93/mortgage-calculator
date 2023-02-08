@@ -1,16 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 
 
-<MudDialog>
+<MudDialog >
     <DialogContent>
         <EditForm Model="@_model" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator/>
             <MudCard Elevation="0">
                 <MudCardContent>
-                    <MudTextField Label="Link Name" HelperText="Displayed in the links menu"
+                    <MudTextField Label="Link Name" HelperText="Displayed in the links menu" Variant="Variant.Outlined"
                         @bind-Value="_model.Name" For="@(() => _model.Name)"/>
-                    <MudTextField Label="Link" Class="mt-3" HelperText="Type/paste in the URL"
+                    <MudTextField Label="Link" Class="mt-3" HelperText="Type/paste in the URL" Variant="Variant.Outlined"
                         @bind-Value="_model.Href" For="@(() => _model.Href)"/>
+                    <MudField Label="Link Icon" HelperText="Shows next to the link in the menu - click the icon image to change" Variant="Variant.Outlined"
+                        Adornment="Adornment.End" AdornmentColor="Color.Info" AdornmentIcon="@_model.Icon" OnAdornmentClick="OnChangeIconClicked">@_model.IconName</MudField>
                 </MudCardContent>
 
                 <MudCardActions>

@@ -40,7 +40,7 @@ public class WebApiRequest : IWebApiRequest
             ?? throw new InvalidCastException("Could not deserialize response stream.");
     }
 
-    public async Task PatchAsync(ApiEndpoint apiEndpoint, object? parameter)
+    public async Task PatchAsync(ApiEndpoint apiEndpoint, object parameter)
     {
         var client = _clientFactory.CreateClient();
         var uri = GetEndpointUri(apiEndpoint);

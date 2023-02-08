@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Interfaces;
-using MortgageCalculator.Core.Models;
+using MortgageCalculator.Core.Documents;
 using MudBlazor;
 
 namespace MortgageCalculator.Components.Dialogs;
@@ -27,7 +27,7 @@ public partial class UsefulLinkEntries : ComponentBase
     {
         var parameters = new DialogParameters
         {
-            [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item with { Name = "Change Me" }     // Shallow copy
+            [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item with { }     // Shallow copy
         };
 
         var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {tableRowClickEventArgs.Item.Name}", parameters);

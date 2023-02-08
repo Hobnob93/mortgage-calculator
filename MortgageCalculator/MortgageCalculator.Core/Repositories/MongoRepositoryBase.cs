@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using MortgageCalculator.Core.Models;
+using MortgageCalculator.Core.Documents;
 using System.Linq.Expressions;
 
 namespace MortgageCalculator.Core.Repositories;

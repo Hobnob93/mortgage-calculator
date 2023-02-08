@@ -1,10 +1,23 @@
-﻿<MudDialog>
-    <DialogContent>
-        Useful Link: @UsefulLink.Name
-    </DialogContent>
+﻿@using Microsoft.AspNetCore.Components.Forms
 
-    <DialogActions>
-        <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Error">Close</MudButton>
-        <MudButton OnClick="() => Dialog.Close(DialogResult.Ok(UsefulLink))" Color="Color.Success">Save Changes</MudButton>
-    </DialogActions>
+
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@_model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator/>
+            <MudCard Elevation="0">
+                <MudCardContent>
+                    <MudTextField Label="Link Name" HelperText="Displayed in the links menu"
+                        @bind-Value="_model.Name" For="@(() => _model.Name)"/>
+                    <MudTextField Label="Link" Class="mt-3" HelperText="Type/paste in the URL"
+                        @bind-Value="_model.Href" For="@(() => _model.Href)"/>
+                </MudCardContent>
+
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Success" Class="ml-auto">Save</MudButton>
+                    <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Error">Cancel</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </DialogContent>
 </MudDialog>

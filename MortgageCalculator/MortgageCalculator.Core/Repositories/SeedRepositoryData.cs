@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using MortgageCalculator.Core.Config;
 using MortgageCalculator.Core.Interfaces;
+using MortgageCalculator.Core.Documents;
 using MortgageCalculator.Core.Models;
 
 namespace MortgageCalculator.Core.Repositories;

@@ -1,4 +1,4 @@
-﻿namespace MortgageCalculator.Core.Models;
+﻿namespace MortgageCalculator.Core.Documents;
 
 public record MortgagePaymentTo : DocumentBase
 {

@@ -1,4 +1,4 @@
-﻿using MortgageCalculator.Core.Models;
+﻿using MortgageCalculator.Core.Documents;
 
 namespace MortgageCalculator.Core.Interfaces;
 

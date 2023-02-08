@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MortgageCalculator.Core.Interfaces;
-using MortgageCalculator.Core.Models;
+using MortgageCalculator.Core.Documents;
 
 namespace MortgageCalculator.WebApi.Controllers
 {

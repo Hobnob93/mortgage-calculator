@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MortgageCalculator.Core.Models;
+namespace MortgageCalculator.Core.Documents;
 
 public record DocumentBase
 {

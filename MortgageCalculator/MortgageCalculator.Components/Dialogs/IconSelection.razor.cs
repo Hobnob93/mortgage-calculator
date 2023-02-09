@@ -16,11 +16,27 @@ public partial class IconSelection : ComponentBase
     [Parameter, EditorRequired]
     public IconData Model { get; set; } = default!;
 
-    private IconData[] _selectableIcons = Array.Empty<IconData>();
+    private IEnumerable<IconData> _selectableIcons = Enumerable.Empty<IconData>();
+
+    private string _searchString = string.Empty;
+    private Func<IconData, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.IconName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
 
     protected override async Task OnParametersSetAsync()
     {
         _selectableIcons = await IconFinder.GetSelectableIcons();
-        Console.WriteLine($"Size: {_selectableIcons.Length}");
+    }
+
+    private void RowClicked(TableRowClickEventArgs<IconData> args)
+    {
+        Dialog.Close(DialogResult.Ok(args.Item));
     }
 }

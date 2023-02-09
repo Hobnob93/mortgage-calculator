@@ -61,7 +61,8 @@ public partial class UsefulLinkEntry : ComponentBase
 
         var options = new DialogOptions
         {
-            MaxWidth = MaxWidth.Large
+            MaxWidth = MaxWidth.Large,
+            NoHeader = true
         };
 
         var iconDialog = await DialogService.ShowAsync<IconSelection>($"Select an Icon", parameters, options);

@@ -1,18 +1,32 @@
-﻿<MudDialog>
-    <DialogContent>        
-        <MudGrid Spacing="1" Justify="Justify.Center">
-            @foreach (var icon in _selectableIcons)
-            {
-                <MudItem>
-                    <MudPaper Height="80px" Width="80px">
-                        <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudText Typo="Typo.body1">@icon.IconName</MudText>
-                            <MudIcon Icon="@icon.Icon" Color="Color.Info"></MudIcon>
-                        </MudStack>
-                    </MudPaper>
-                </MudItem>
-            }
-        </MudGrid>
+﻿@using MortgageCalculator.Core.Models;
+
+<MudDialog>
+    <DialogContent>
+        <MudContainer Style="height: 65vh; overflow-y: scroll">
+            <MudTable T="IconData" Items="@_selectableIcons" Dense="true" Hover="true" Filter="@_quickFilter" Elevation="0" OnRowClick="RowClicked">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Select an Icon</MudText>
+                    <MudSpacer />
+                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <ColGroup>
+                    <col />
+                    <col style="width:25%" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh>Icon Name</MudTh>
+                    <MudTh>Icon</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Icon Name">@context.IconName</MudTd>
+                    <MudTd DataLabel="Icon"><MudIcon Icon="@context.Icon" Size="@Size.Medium" /></MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudContainer>
     </DialogContent>
 
     <DialogActions>

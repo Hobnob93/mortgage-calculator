@@ -15,8 +15,9 @@
                 </MudCardContent>
 
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Success" Class="ml-auto">Save</MudButton>
-                    <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Error">Cancel</MudButton>
+                    <MudButton OnClick="DeleteClicked" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Color="Color.Success" Class="ml-auto">Save</MudButton>
+                    <MudButton OnClick="() => Dialog.Cancel()" Color="Color.Info">Cancel</MudButton>
                 </MudCardActions>
             </MudCard>
         </EditForm>

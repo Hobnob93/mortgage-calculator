@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MortgageCalculator.Core.Documents;
+using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Models;
 using MudBlazor;
 
@@ -36,13 +37,19 @@ public partial class UsefulLinkEntry : ComponentBase
 
     private void OnValidSubmit(EditContext context)
     {
-        Dialog.Close(DialogResult.Ok(new UsefulLink
-        { 
-            Id = _model.Id,
-            Name = _model.Name,
-            Href = _model.Href,
-            Icon = _model.Icon,
-            IconName = _model.IconName
+        Dialog.Close(DialogResult.Ok(new EditUsefulLinkResult
+        {
+            EditResult = string.IsNullOrWhiteSpace(_model.Id)
+                ? EditResult.New
+                : EditResult.Changed,
+            UsefulLink = new UsefulLink
+            {
+                Id = _model.Id,
+                Name = _model.Name,
+                Href = _model.Href,
+                Icon = _model.Icon,
+                IconName = _model.IconName
+            }
         }));
     }
 
@@ -83,5 +90,21 @@ public partial class UsefulLinkEntry : ComponentBase
                 Snackbar.Add($"Error trying to change icon: {ex.Message}");
             }
         }
+    }
+
+    private void DeleteClicked()
+    {
+        Dialog.Close(DialogResult.Ok(new EditUsefulLinkResult
+        {
+            EditResult = EditResult.Deleted,
+            UsefulLink = new UsefulLink
+            {
+                Id = _model.Id,
+                Name = _model.Name,
+                Href = _model.Href,
+                Icon = _model.Icon,
+                IconName = _model.IconName
+            }
+        }));
     }
 }

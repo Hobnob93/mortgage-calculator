@@ -55,6 +55,21 @@ public class WebApiRequest : IWebApiRequest
         response.EnsureSuccessStatusCode();
     }
 
+    public async Task DeleteAsync(ApiEndpoint apiEndpoint, object parameter)
+    {
+        var client = _clientFactory.CreateClient();
+        var uri = GetEndpointUri(apiEndpoint);
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"{_config.BaseUrl}{uri}");
+
+        if (parameter is not null)
+            request.Content = new StringContent(JsonSerializer.Serialize(parameter), Encoding.UTF8, "application/json");
+
+        var response = await client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+    }
+
     private string GetEndpointUri(ApiEndpoint endpoint) =>
         endpoint switch
         {

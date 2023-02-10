@@ -24,8 +24,13 @@ namespace MortgageCalculator.WebApi.Controllers
         [HttpPatch(Name = "UpdateUsefulLink")]
         public async Task Patch([FromBody] UsefulLink link)
         {
-            Console.WriteLine($"ID: {link.Id}");
             await _linkRepo.UpdateLink(link);
+        }
+
+        [HttpDelete(Name = "DeleteUsefulLink")]
+        public async Task Delete([FromBody] UsefulLink link)
+        {
+            await _linkRepo.DeleteLink(link);
         }
     }
 }

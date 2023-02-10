@@ -6,4 +6,5 @@ public interface IUsefulLinksRepository
 {
     Task<IEnumerable<UsefulLink>> GetLinks();
     Task UpdateLink(UsefulLink link);
+    Task DeleteLink(UsefulLink link);
 }

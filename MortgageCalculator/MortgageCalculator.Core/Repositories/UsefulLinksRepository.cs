@@ -25,4 +25,9 @@ public class UsefulLinksRepository : MongoRepositoryBase, IUsefulLinksRepository
 	{
 		await UpdateDocumentInCollection(_collectionNames.UsefulLinks, link);
 	}
+
+	public async Task DeleteLink(UsefulLink link)
+	{
+		await DeleteDocumentInCollection(_collectionNames.UsefulLinks, link);
+	}
 }

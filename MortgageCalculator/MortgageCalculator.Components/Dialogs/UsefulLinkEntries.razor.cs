@@ -3,6 +3,7 @@ using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Documents;
 using MudBlazor;
+using MortgageCalculator.Core.Models;
 
 namespace MortgageCalculator.Components.Dialogs;
 
@@ -58,18 +59,11 @@ public partial class UsefulLinkEntries : ComponentBase
         {
             try
             {
-                var resultLink = (UsefulLink)result.Data
-                    ?? throw new InvalidCastException("Could not cast data result into useful link");
-
-                await WebApiRequest.PatchAsync(ApiEndpoint.UsefulLinks, resultLink);
-
-                var linkIndex = UsefulLinks.FindIndex(l => l.Id == resultLink.Id);
-                if (linkIndex != -1)
-                    UsefulLinks[linkIndex] = resultLink;
+                if (result.Data is EditUsefulLinkResult editResult)
+                    await HandleEditResult(editResult);
                 else
-                    UsefulLinks.Add(resultLink);
+                    throw new InvalidCastException("Could not cast data result into useful link");
 
-                Snackbar.Add("Link Saved!", Severity.Success);
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
@@ -77,5 +71,34 @@ public partial class UsefulLinkEntries : ComponentBase
                 Snackbar.Add($"Error trying to save link: {ex.Message}");
             }
         }
+    }
+
+    private async Task HandleEditResult(EditUsefulLinkResult result)
+    {
+        if (result.EditResult == EditResult.New || result.EditResult == EditResult.Changed)
+            await HandleSavedLink(result.UsefulLink);
+        else
+            await HandleDeletion(result.UsefulLink);
+    }
+
+    private async Task HandleDeletion(UsefulLink link)
+    {
+        await WebApiRequest.DeleteAsync(ApiEndpoint.UsefulLinks, link);
+
+        UsefulLinks.RemoveAll(l => l.Id == link.Id);
+        Snackbar.Add("Link Deleted!", Severity.Info);
+    }
+
+    private async Task HandleSavedLink(UsefulLink link)
+    {
+        await WebApiRequest.PatchAsync(ApiEndpoint.UsefulLinks, link);
+
+        var linkIndex = UsefulLinks.FindIndex(l => l.Id == link.Id);
+        if (linkIndex != -1)
+            UsefulLinks[linkIndex] = link;
+        else
+            UsefulLinks.Add(link);
+
+        Snackbar.Add("Link Saved!", Severity.Success);
     }
 }

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MortgageCalculator.Core.Documents;
-using MortgageCalculator.Core.Enums;
 using MortgageCalculator.Core.Models;
-using MortgageCalculator.Core.Services;
 using MudBlazor;
 
 namespace MortgageCalculator.Components.Dialogs;
@@ -78,7 +76,6 @@ public partial class UsefulLinkEntry : ComponentBase
                 _model.Icon = resultLink.Icon;
                 _model.IconName = resultLink.IconName;
 
-                Snackbar.Add("Icon successfully changed!", Severity.Success);
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)

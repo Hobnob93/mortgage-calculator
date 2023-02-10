@@ -21,13 +21,29 @@ public partial class UsefulLinkEntries : ComponentBase
     private MudDialogInstance Dialog { get; set; } = default!;
 
     [Parameter, EditorRequired]
-    public UsefulLink[] UsefulLinks { get; set; } = default!;
+    public List<UsefulLink> UsefulLinks { get; set; } = default!;
 
     private async Task RowClickEvent(TableRowClickEventArgs<UsefulLink> tableRowClickEventArgs)
     {
+        await ShowManageLinkDialog(tableRowClickEventArgs.Item);
+    }
+
+    private async Task CreateNewLink()
+    {
+        await ShowManageLinkDialog(new UsefulLink
+        { 
+            Href = string.Empty,
+            Name = string.Empty,
+            IconName = "Link",
+            Icon = Icons.Material.Filled.Link
+        });
+    }
+
+    private async Task ShowManageLinkDialog(UsefulLink link)
+    {
         var parameters = new DialogParameters
         {
-            [nameof(UsefulLinkEntry.UsefulLink)] = tableRowClickEventArgs.Item with { }     // Shallow copy
+            [nameof(UsefulLinkEntry.UsefulLink)] = link with { }     // Shallow copy
         };
 
         var options = new DialogOptions
@@ -35,7 +51,7 @@ public partial class UsefulLinkEntries : ComponentBase
             MaxWidth = MaxWidth.Medium
         };
 
-        var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {tableRowClickEventArgs.Item.Name}", parameters, options);
+        var entryDialog = await DialogService.ShowAsync<UsefulLinkEntry>($"Manage {link.Name}", parameters, options);
         var result = await entryDialog.Result;
 
         if (!result.Canceled)
@@ -43,12 +59,15 @@ public partial class UsefulLinkEntries : ComponentBase
             try
             {
                 var resultLink = (UsefulLink)result.Data
-                ?? throw new InvalidCastException("Could not cast data result into useful link");
+                    ?? throw new InvalidCastException("Could not cast data result into useful link");
 
                 await WebApiRequest.PatchAsync(ApiEndpoint.UsefulLinks, resultLink);
 
-                var linkIndex = Array.FindIndex(UsefulLinks, l => l.Id == resultLink.Id);
-                UsefulLinks[linkIndex] = resultLink;
+                var linkIndex = UsefulLinks.FindIndex(l => l.Id == resultLink.Id);
+                if (linkIndex != -1)
+                    UsefulLinks[linkIndex] = resultLink;
+                else
+                    UsefulLinks.Add(resultLink);
 
                 Snackbar.Add("Link Saved!", Severity.Success);
                 await InvokeAsync(StateHasChanged);

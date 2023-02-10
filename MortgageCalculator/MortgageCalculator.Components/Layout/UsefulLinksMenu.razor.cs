@@ -3,7 +3,6 @@ using MortgageCalculator.Components.BaseComponents;
 using MortgageCalculator.Components.Dialogs;
 using MortgageCalculator.Core.Documents;
 using MortgageCalculator.Core.Enums;
-using MortgageCalculator.Core.Models;
 using MudBlazor;
 
 namespace MortgageCalculator.Components.Layout;
@@ -13,7 +12,7 @@ public partial class UsefulLinksMenu : ApiComponentBase
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
 
-    private UsefulLink[] UsefulLinks { get; set; } = Array.Empty<UsefulLink>();
+    private List<UsefulLink> UsefulLinks { get; set; } = Enumerable.Empty<UsefulLink>().ToList();
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,10 +21,10 @@ public partial class UsefulLinksMenu : ApiComponentBase
 
     private async Task LoadUsefulLinks()
     {
-        UsefulLinks = (await ApiGet<UsefulLink[]>(ApiEndpoint.UsefulLinks)
+        UsefulLinks = (await ApiGet<List<UsefulLink>>(ApiEndpoint.UsefulLinks)
             ?? Enumerable.Empty<UsefulLink>())
             .OrderBy(l => l.Name)
-            .ToArray();
+            .ToList();
     }
 
     private void ShowDialog()

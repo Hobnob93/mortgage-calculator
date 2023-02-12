@@ -9,5 +9,4 @@ public class CollectionNamesConfig
     public string MortgagePayments { get; set; } = default!;
     public string Owners { get; set; } = default!;
     public string UsefulLinks { get; set; } = default!;
-    public string InterestPeriods { get; set; } = default!;
 }

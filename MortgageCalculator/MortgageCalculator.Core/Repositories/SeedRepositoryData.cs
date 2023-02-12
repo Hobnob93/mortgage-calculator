@@ -37,6 +37,12 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             await SeedMortgageData();
         }
 
+        var interestPeriods = await GetAllFromCollection<InterestPeriod>(_collectionNames.InterestPeriods);
+        if (!interestPeriods.Any())
+        {
+            await SeedInterestPeriods();
+        }
+
         var payments = await GetAllFromCollection<MortgagePayment>(_collectionNames.MortgagePayments);
         if (!payments.Any())
         {
@@ -59,7 +65,7 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             City = "Bristol",
             Postcode = "BS34 8XT",
             PurchasedValue = 262500m,
-            EstimatedValue = 269240m
+            EstimatedValue = 296240m
         });
     }
 
@@ -84,12 +90,21 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
         {
             Name = "Halifax 2021",
             Provider = "Halifax",
-            AmountBorrowed = 250373m,
-            InterestRate = 3.73,
-            StartDate = new DateOnly(2021, 9, 30),
+            AmountBorrowed = 249374m,            
+            Opened = new DateOnly(2021, 9, 14),
             FullTermLength = 35,
-            FixedTermEndDate = new DateOnly(2023, 8, 30),
-            FixedTermLength = 2,
+            FirstPaymentAmount = 1494.08m
+        });
+    }
+
+    private async Task SeedInterestPeriods()
+    {
+        await CreateDocumentInCollection(_collectionNames.InterestPeriods, new InterestPeriod
+        {
+            Id = Guid.NewGuid().ToString(),
+            From = new DateOnly(2021, 9, 14),
+            To = new DateOnly(2023, 9, 30),
+            InterestRate = 3.73,
             MonthlyPayment = 1060.85m
         });
     }
@@ -97,133 +112,55 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
     private async Task SeedPaymentsData()
     {
         var mortgage = await GetSingleFromCollection<Mortgage>(_collectionNames.Mortgages, _ => true);
+        var interestPeriod = await GetSingleFromCollection<InterestPeriod>(_collectionNames.InterestPeriods, _ => true);
         var mortgagePaymentTemplate = new MortgagePayment
         {
-            IsOverPayment = false,
-            Amount = mortgage.MonthlyPayment,
+            IsOverPayment = true,
             PaidTo = new MortgagePaymentTo
             {
-                Provider = mortgage.Provider,
-                StartDate = mortgage.StartDate,
-                FixedTermEndDate = mortgage.FixedTermEndDate
+                Id = mortgage.Id,
+                Name = mortgage.Name,
+                StartDate = mortgage.Opened
             }
         };
 
-        var ownerKyle = await GetSingleFromCollection<Owner>(_collectionNames.Owners, o => o.FirstName == "Kyle");
-        var ownerAmber = await GetSingleFromCollection<Owner>(_collectionNames.Owners, o => o.FirstName == "Amber");
-
-        await CreateDocumentsInCollection(_collectionNames.MortgagePayments, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            Amount = 1825.37m,
-            PaidOn = new DateOnly(2021, 10, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2021, 11, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2021, 12, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 1, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 2, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 2, 11),
-            Amount = 200m,
-            Owner = ownerKyle,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 2, 28),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 3, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 3, 23),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 4, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 4, 25),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 5, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 5, 23),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 6, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 6, 23),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 7, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 7, 22),
-            Amount = 100m,
-            Owner = ownerAmber,
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 8, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 9, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 10, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 11, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2022, 12, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2023, 1, 1)
-        }, mortgagePaymentTemplate with
-        {
-            Id = Guid.NewGuid().ToString(),
-            PaidOn = new DateOnly(2023, 2, 1)
-        });
+        await CreateDocumentsInCollection(_collectionNames.MortgagePayments, 
+            mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 2, 11),
+                Amount = 200m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 2, 28),
+                Amount = 100m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 3, 23),
+                Amount = 100m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 4, 25),
+                Amount = 100m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 5, 23),
+                Amount = 100m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 6, 23),
+                Amount = 100m
+            }, mortgagePaymentTemplate with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaidOn = new DateOnly(2022, 7, 22),
+                Amount = 100m
+            });
     }
 
     private async Task SeedUsefulLinksData()

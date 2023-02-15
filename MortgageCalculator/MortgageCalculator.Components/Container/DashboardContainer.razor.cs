@@ -4,7 +4,7 @@ using MortgageCalculator.Components.Enums;
 
 namespace MortgageCalculator.Components.Container;
 
-public partial class LandingContainer : ComponentBase
+public partial class DashboardContainer : ComponentBase
 {
     [Parameter, EditorRequired]
     public RenderFragment ChildContent { get; set; } = default!;

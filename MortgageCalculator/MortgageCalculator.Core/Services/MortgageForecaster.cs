@@ -26,7 +26,7 @@ public class MortgageForecaster : IMortgageForecaster
 
         var forecast = new DetailedForecast();
 
-        while (amountToPayoff > 0m) 
+        while (amountToPayoff > 0m)
         {
             var paymentsInMonth = (await _mortgagePaymentsRepo.PaymentsInMonth(currentDate)).ToArray();
             forecast.Months.Add(ForecastNextMonth(ref amountToPayoff, currentDate, mortgage, paymentsInMonth));

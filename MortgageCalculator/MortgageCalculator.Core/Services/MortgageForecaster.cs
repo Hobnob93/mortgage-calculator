@@ -43,14 +43,14 @@ public class MortgageForecaster : IMortgageForecaster
         var interestPeriod = mortgage.InterestPeriods
             .SingleOrDefault(ip => ip.From <= date && date <= ip.To, mortgage.InterestPeriods.Last());
 
-        if (mortgage.FirstPaymentDate == date)
-            payments.Add(new MortgagePayment { Amount = mortgage.FirstPaymentAmount });
-
         var forecastForMonth = new DetailedForecastMonth();
 
         for (var i = 1; i <= date.DaysInMonth(); i++)
         {
             date = new DateOnly(date.Year, date.Month, i);
+
+            if (mortgage.FirstPaymentDate == date)
+                payments.Add(new MortgagePayment { Amount = mortgage.FirstPaymentAmount });
 
             var interestAmount = amountToPayOff * (decimal)(interestPeriod.DailyInterestRate / 100.0);
             var payment = payments

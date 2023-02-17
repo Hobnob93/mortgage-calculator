@@ -25,4 +25,15 @@ public static class DateOnlyExtensions
             .AddDays(-(thisMonth.Day - 1))
             .AddMonths(1);
     }
+
+    public static DateOnly AdjustedForWeekend(this DateOnly date)
+    {
+        if (date.DayOfWeek == DayOfWeek.Sunday)
+            return date.AddDays(1);
+
+        if (date.DayOfWeek == DayOfWeek.Saturday)
+            return date.AddDays(2);
+
+        return date;
+    }
 }

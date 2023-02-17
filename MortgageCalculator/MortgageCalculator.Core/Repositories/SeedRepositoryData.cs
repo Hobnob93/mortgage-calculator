@@ -93,6 +93,7 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             Opened = new DateOnly(2021, 9, 14),
             FullTermLength = 35,
             FirstPaymentAmount = 1494.08m,
+            House = house,
             InterestPeriods = new() 
             {
                 new InterestPeriod

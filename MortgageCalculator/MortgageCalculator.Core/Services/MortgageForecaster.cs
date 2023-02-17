@@ -29,7 +29,11 @@ public class MortgageForecaster : IMortgageForecaster
         while (amountToPayoff > 0m)
         {
             var paymentsInMonth = (await _mortgagePaymentsRepo.PaymentsInMonth(currentDate)).ToArray();
-            forecast.Months.Add(ForecastNextMonth(ref amountToPayoff, currentDate, mortgage, paymentsInMonth));
+            var interestPeriod = mortgage.InterestPeriods
+                .SingleOrDefault(ip => ip.From <= currentDate && currentDate <= ip.To, mortgage.InterestPeriods.Last());
+            var house = mortgage.House ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
+
+            forecast.Months.Add(ForecastNextMonth(ref amountToPayoff, currentDate, interestPeriod, house, paymentsInMonth));
 
             currentDate = currentDate.StartOfNextMonth();
         }
@@ -37,8 +41,31 @@ public class MortgageForecaster : IMortgageForecaster
         return forecast;
     }
 
-    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, MortgagePayment[] payments)
+    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, InterestPeriod interest, House house, MortgagePayment[] payments)
     {
+        var forecastForMonth = new DetailedForecastMonth();
 
+        for (var i = 1; i <= date.DaysInMonth(); i++)
+        {
+            date = new DateOnly(date.Year, date.Month, i);
+
+            var interestAmount = amountToPayOff * (decimal)interest.DailyInterestRate;
+            var payment = payments
+                .Where(p => p.PaidOn == date)
+                .Sum(p => p.Amount);
+
+            amountToPayOff = (amountToPayOff + interestAmount) - payment;
+
+            forecastForMonth.Days.Add(new DetailedForecastDay
+            {
+                Date = date,
+                PaidIn = payment,
+                PaidOut = interestAmount,
+                Balance = amountToPayOff,
+                LoanToValue = (double)((amountToPayOff / house.EstimatedValue) * 100m)
+            });
+        }
+
+        return forecastForMonth;
     }
 }

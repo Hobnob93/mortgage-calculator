@@ -18,19 +18,19 @@ namespace MortgageCalculator.WebApi.Controllers
         [HttpGet(Name = "GetUsefulLinks")]
         public async Task<IEnumerable<UsefulLink>> Get()
         {
-            return await _linkRepo.GetLinks();
+            return await _linkRepo.GetAll();
         }
 
         [HttpPatch(Name = "UpdateUsefulLink")]
         public async Task Patch([FromBody] UsefulLink link)
         {
-            await _linkRepo.UpdateLink(link);
+            await _linkRepo.UpdateDocument(link);
         }
 
         [HttpDelete(Name = "DeleteUsefulLink")]
         public async Task Delete([FromBody] UsefulLink link)
         {
-            await _linkRepo.DeleteLink(link);
+            await _linkRepo.DeleteDocument(link);
         }
     }
 }

@@ -13,7 +13,7 @@ public static class DateOnlyExtensions
     public static (DateOnly, DateOnly) FirstAndLastDaysOfMonth(this DateOnly date)
     {
         var daysInMonth = date.DaysInMonth();
-        var firstOfMonth = new DateOnly(date.Year, date.Year, 1);
+        var firstOfMonth = new DateOnly(date.Year, date.Month, 1);
         var lastOfMonth = new DateOnly(date.Year, date.Month, daysInMonth);
 
         return (firstOfMonth, lastOfMonth);

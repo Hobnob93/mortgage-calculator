@@ -5,7 +5,7 @@ using MortgageCalculator.Core.Models;
 namespace MortgageCalculator.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class ForecastController : ControllerBase
     {
         private readonly IMortgageForecaster _forecaster;

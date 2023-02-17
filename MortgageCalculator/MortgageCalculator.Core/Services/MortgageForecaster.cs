@@ -28,12 +28,8 @@ public class MortgageForecaster : IMortgageForecaster
 
         while (amountToPayoff > 0m)
         {
-            var paymentsInMonth = (await _mortgagePaymentsRepo.PaymentsInMonth(currentDate)).ToArray();
-            var interestPeriod = mortgage.InterestPeriods
-                .SingleOrDefault(ip => ip.From <= currentDate && currentDate <= ip.To, mortgage.InterestPeriods.Last());
-            var house = mortgage.House ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
-
-            forecast.Months.Add(ForecastNextMonth(ref amountToPayoff, currentDate, interestPeriod, house, paymentsInMonth));
+            var paymentsInMonth = (await _mortgagePaymentsRepo.PaymentsInMonth(currentDate)).ToList();
+            forecast.Months.Add(ForecastNextMonth(ref amountToPayoff, currentDate, mortgage, paymentsInMonth));
 
             currentDate = currentDate.StartOfNextMonth();
         }
@@ -41,15 +37,22 @@ public class MortgageForecaster : IMortgageForecaster
         return forecast;
     }
 
-    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, InterestPeriod interest, House house, MortgagePayment[] payments)
+    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, List<MortgagePayment> payments)
     {
+        var house = mortgage.House ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
+        var interestPeriod = mortgage.InterestPeriods
+            .SingleOrDefault(ip => ip.From <= date && date <= ip.To, mortgage.InterestPeriods.Last());
+
+        if (mortgage.FirstPaymentDate == date)
+            payments.Add(new MortgagePayment { Amount = mortgage.FirstPaymentAmount });
+
         var forecastForMonth = new DetailedForecastMonth();
 
         for (var i = 1; i <= date.DaysInMonth(); i++)
         {
             date = new DateOnly(date.Year, date.Month, i);
 
-            var interestAmount = amountToPayOff * (decimal)interest.DailyInterestRate;
+            var interestAmount = amountToPayOff * (decimal)(interestPeriod.DailyInterestRate / 100.0);
             var payment = payments
                 .Where(p => p.PaidOn == date)
                 .Sum(p => p.Amount);

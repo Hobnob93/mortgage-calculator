@@ -93,6 +93,7 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             Opened = new DateOnly(2021, 9, 14),
             FullTermLength = 35,
             FirstPaymentAmount = 1494.08m,
+            FirstPaymentDate = new DateOnly(2021, 10, 1),
             House = house,
             InterestPeriods = new() 
             {
@@ -115,19 +116,19 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
         await CreateDocumentsInCollection(_collectionNames.MortgagePayments,
             (new[]
             {
-                (PaidOn: new DateOnly(2022, 2, 11), Amount: 200m),
-                (PaidOn: new DateOnly(2022, 2, 28), Amount: 100m),
-                (PaidOn: new DateOnly(2022, 3, 23), Amount: 100m),
-                (PaidOn: new DateOnly(2022, 4, 25), Amount: 100m),
-                (PaidOn: new DateOnly(2022, 5, 23), Amount: 100m),
-                (PaidOn: new DateOnly(2022, 6, 23), Amount: 100m),
-                (PaidOn: new DateOnly(2022, 7, 22), Amount: 100m)
+                (PaidOn: new DateOnly(2022, 2, 11), Amount: 200m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 2, 28), Amount: 100m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 3, 23), Amount: 100m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 4, 25), Amount: 100m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 5, 23), Amount: 100m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 6, 23), Amount: 100m, IsOverPay: true),
+                (PaidOn: new DateOnly(2022, 7, 22), Amount: 100m, IsOverPay: true)
             }).Select(x => new MortgagePayment
             {
                 Id = NewGuid(),
                 Amount = x.Amount,
                 PaidOn = x.PaidOn,
-                IsOverPayment = true,
+                IsOverPayment = x.IsOverPay,
                 PaidTo = new MortgagePaymentTo
                 {
                     Id = mortgage.Id,

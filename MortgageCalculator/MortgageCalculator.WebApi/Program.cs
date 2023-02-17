@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MortgageCalculator.Core.Config;
+using MortgageCalculator.Core.Documents;
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Repositories;
+using MortgageCalculator.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,7 @@ builder.Services.Configure<ConnectionStringsConfig>(config.GetSection(Connection
 builder.Services.Configure<DatabaseNamesConfig>(config.GetSection(DatabaseNamesConfig.Section));
 builder.Services.Configure<CollectionNamesConfig>(config.GetSection(CollectionNamesConfig.Section));
 
-builder.Services.AddTransient<IMongoDatabase>(s =>
+builder.Services.AddTransient(s =>
 {
     var connString = s.GetService<IOptions<ConnectionStringsConfig>>()?.Value.Local
         ?? throw new InvalidDataException($"Connection String '{nameof(ConnectionStringsConfig.Local)}' has not been provided in appsettings.");
@@ -24,7 +26,13 @@ builder.Services.AddTransient<IMongoDatabase>(s =>
 });
 
 builder.Services.AddTransient<ISeedRepositoryData, SeedRepositoryData>();
-builder.Services.AddTransient<IUsefulLinksRepository, UsefulLinksRepository>();
+builder.Services.AddTransient<IMongoRepository<UsefulLink>, UsefulLinksRepository>();
+builder.Services.AddTransient<IMongoRepository<Mortgage>, MortgagesRepository>();
+builder.Services.AddTransient<IMongoRepository<MortgagePayment>, MortgagePaymentsRepository>();
+
+builder.Services.AddTransient<IMortgagePaymentsRepository, MortgagePaymentsRepository>();
+
+builder.Services.AddTransient<IMortgageForecaster, MortgageForecaster>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -6,28 +6,28 @@ using MortgageCalculator.Core.Documents;
 
 namespace MortgageCalculator.Core.Repositories;
 
-public class UsefulLinksRepository : MongoRepositoryBase, IUsefulLinksRepository
+public class UsefulLinksRepository : MongoRepositoryBase, IMongoRepository<UsefulLink>
 {
-    private readonly CollectionNamesConfig _collectionNames;
+    private readonly string _collectionName;
 
     public UsefulLinksRepository(IMongoDatabase mongoDatabase, IOptions<CollectionNamesConfig> collectionNames)
 		: base(mongoDatabase)
 	{
-		_collectionNames = collectionNames.Value;
+		_collectionName = collectionNames.Value.UsefulLinks;
 	}
 
-	public async Task<IEnumerable<UsefulLink>> GetLinks()
+	public async Task<IEnumerable<UsefulLink>> GetAll()
 	{
-		return await GetAllFromCollection<UsefulLink>(_collectionNames.UsefulLinks);
+		return await GetAllFromCollection<UsefulLink>(_collectionName);
 	}
 
-	public async Task UpdateLink(UsefulLink link)
+	public async Task UpdateDocument(UsefulLink document)
 	{
-		await UpdateDocumentInCollection(_collectionNames.UsefulLinks, link);
+		await UpdateDocumentInCollection(_collectionName, document);
 	}
 
-	public async Task DeleteLink(UsefulLink link)
+	public async Task DeleteDocument(UsefulLink document)
 	{
-		await DeleteDocumentInCollection(_collectionNames.UsefulLinks, link);
+		await DeleteDocumentInCollection(_collectionName, document);
 	}
 }

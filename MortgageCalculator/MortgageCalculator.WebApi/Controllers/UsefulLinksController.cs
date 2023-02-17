@@ -8,9 +8,9 @@ namespace MortgageCalculator.WebApi.Controllers
     [Route("[controller]")]
     public class UsefulLinksController : ControllerBase
     {
-        private readonly IUsefulLinksRepository _linkRepo;
+        private readonly IMongoRepository<UsefulLink> _linkRepo;
 
-        public UsefulLinksController(IUsefulLinksRepository mortgageRepo)
+        public UsefulLinksController(IMongoRepository<UsefulLink> mortgageRepo)
         {
             _linkRepo = mortgageRepo;
         }

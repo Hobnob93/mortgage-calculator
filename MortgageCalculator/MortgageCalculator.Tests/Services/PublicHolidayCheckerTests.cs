@@ -122,6 +122,37 @@ public class PublicHolidayCheckerTests
         boxingDay.Day.Should().Be(expectedDay);
     }
 
+    [TestCase(2022, 1, 3)]      // New Years Day
+    [TestCase(2024, 3, 29)]     // Good Friday
+    [TestCase(1777, 3, 31)]     // Easter Monday
+    [TestCase(2024, 5, 6)]      // May Day
+    [TestCase(2025, 5, 26)]     // Spring Day
+    [TestCase(2022, 8, 29)]     // Summer Day
+    [TestCase(2021, 12, 27)]    // Christmas Day
+    [TestCase(2020, 12, 28)]    // Boxing Day
+    public void IsBankHoliday_OnAGivenDay_ThatIsABankHoliday_ShouldReturnTrue(int year, int month, int day)
+    {
+        var sut = CreateSut();
+        var date = new DateOnly(year, month, day);
+
+        var isBankHoliday = sut.IsBankHoliday(date);
+
+        isBankHoliday.Should().BeTrue();
+    }
+
+    [TestCase(2023, 2, 12)]
+    [TestCase(1987, 6, 30)]
+    [TestCase(1993, 10, 11)]
+    public void IsBankHoliday_OnAGivenDay_ThatIsNotABankHoliday_ShouldReturnFalse(int year, int month, int day)
+    {
+        var sut = CreateSut();
+        var date = new DateOnly(year, month, day);
+
+        var isBankHoliday = sut.IsBankHoliday(date);
+
+        isBankHoliday.Should().BeFalse();
+    }
+
     private PublicHolidayChecker CreateSut()
     {
         return new PublicHolidayChecker();

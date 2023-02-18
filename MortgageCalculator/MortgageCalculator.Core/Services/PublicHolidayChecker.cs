@@ -7,7 +7,19 @@ public class PublicHolidayChecker : IPublicHolidayChecker
 {
     public bool IsBankHoliday(DateOnly date)
     {
-        return false;
+        var year = date.Year;
+
+        return new[]
+        {
+            NewYearsDay(year),
+            GoodFriday(year),
+            EasterMonday(year),
+            MayDay(year),
+            SpringDay(year),
+            SummerDay(year),
+            ChristmasDay(year),
+            BoxingDay(year)
+        }.Any(x => x == date);
     }
 
     public DateOnly NewYearsDay(int year)

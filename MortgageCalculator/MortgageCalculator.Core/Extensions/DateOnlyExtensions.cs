@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using MongoDB.Bson.Serialization.Conventions;
 using System.Runtime.CompilerServices;
 
 namespace MortgageCalculator.Core.Extensions;
@@ -35,5 +36,19 @@ public static class DateOnlyExtensions
             return date.AddDays(2);
 
         return date;
+    }
+
+    public static bool IsWeekend(this DateOnly date)
+    {
+        return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+    }
+
+    public static int DaysInYear(this DateOnly date)
+    {
+        var daysInFeb = new DateOnly(date.Year, 2, 1).DaysInMonth();
+        if (daysInFeb == 28)
+            return 365;
+
+        return 366;
     }
 }

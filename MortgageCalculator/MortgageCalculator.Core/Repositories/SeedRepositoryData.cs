@@ -102,7 +102,7 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
                     Id = NewGuid(),
                     From = new DateOnly(2021, 9, 14),
                     To = new DateOnly(2023, 9, 30),
-                    InterestRate = 3.73,
+                    InterestRate = 3.73m,
                     MonthlyPayment = 1060.85m
                 }
             }

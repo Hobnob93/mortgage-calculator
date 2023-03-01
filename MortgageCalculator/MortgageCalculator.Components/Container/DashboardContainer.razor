@@ -1,3 +1,12 @@
-﻿<MudPaper Class="d-flex align-center justify-center" Style="@Styling">
-    @ChildContent
-</MudPaper>
+﻿<MudCard Style="@CardStyling" Class="@CardClasses">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5">@Title</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent Class="@CardContentClasses">
+        <MudPaper Elevation="0">
+            @ChildContent
+        </MudPaper>
+    </MudCardContent>
+</MudCard>

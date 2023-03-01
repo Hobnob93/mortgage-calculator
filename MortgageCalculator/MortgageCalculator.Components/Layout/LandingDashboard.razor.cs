@@ -2,7 +2,7 @@
 
 namespace MortgageCalculator.Components.Layout;
 
-public partial class LandingGrid : ApiComponentBase
+public partial class LandingDashboard : ApiComponentBase
 {
 
 }

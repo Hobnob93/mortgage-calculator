@@ -3,7 +3,6 @@ using MongoDB.Driver;
 using MortgageCalculator.Core.Config;
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Documents;
-using MortgageCalculator.Core.Models;
 
 namespace MortgageCalculator.Core.Repositories;
 
@@ -64,7 +63,8 @@ public class SeedRepositoryData : MongoRepositoryBase, ISeedRepositoryData
             City = "Bristol",
             Postcode = "BS34 8XT",
             PurchasedValue = 262500m,
-            EstimatedValue = 296240m
+            EstimatedValue = 296240m,
+            MovedIn = new DateOnly(2021, 9, 14)
         });
     }
 

@@ -23,6 +23,7 @@ builder.Services.AddMudServices(config =>
 
 builder.Services.AddTransient<IWebApiRequest, WebApiRequest>();
 builder.Services.AddTransient<IIconFinder, IconFinder>();
+builder.Services.AddTransient<IHtmlBuilderFactory, HtmlBuilderFactory>();
 
 builder.Services.AddHttpClient();
 

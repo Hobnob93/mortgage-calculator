@@ -16,7 +16,7 @@ namespace MortgageCalculator.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<DetailedForecast> GetDetailedForecast()
+        public async Task<DetailedForecast> Detailed()
         {
             return await _forecaster.GetDetailedForecast();
         }

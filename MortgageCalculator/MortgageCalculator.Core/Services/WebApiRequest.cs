@@ -70,10 +70,15 @@ public class WebApiRequest : IWebApiRequest
         response.EnsureSuccessStatusCode();
     }
 
-    private string GetEndpointUri(ApiEndpoint endpoint) =>
-        endpoint switch
-        {
-            ApiEndpoint.UsefulLinks => _config.UsefulLinks,
-            _ => throw new InvalidOperationException($"The endpoint {endpoint} has not been defined.")
-        };
+    private string GetEndpointUri(ApiEndpoint endpoint)
+    {
+        var endpointName = endpoint.ToString();
+        var configProperty = _config.GetType().GetProperty(endpointName)
+            ?? throw new InvalidOperationException($"The endpoint {endpoint} has not been defined.");
+
+        var configValue = configProperty.GetValue(_config) as string
+            ?? throw new InvalidOperationException($"The endpoint {endpoint} has no value.");
+
+        return configValue;
+    }
 }

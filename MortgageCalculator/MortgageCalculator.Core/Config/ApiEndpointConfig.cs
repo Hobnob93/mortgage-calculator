@@ -6,4 +6,5 @@ public class ApiEndpointConfig
 
     public string BaseUrl { get; set; } = default!;
     public string UsefulLinks { get; set; } = default!;
+    public string DetailedForecast { get; set; } = default!;
 }

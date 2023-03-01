@@ -32,6 +32,7 @@ builder.Services.AddTransient<IMongoRepository<MortgagePayment>, MortgagePayment
 
 builder.Services.AddTransient<IMortgagePaymentsRepository, MortgagePaymentsRepository>();
 
+builder.Services.AddTransient<IMortgagePayments, MortgagePayments>();
 builder.Services.AddTransient<IPublicHolidayChecker, PublicHolidayChecker>();
 builder.Services.AddTransient<IMortgageForecaster, MortgageForecaster>();
 

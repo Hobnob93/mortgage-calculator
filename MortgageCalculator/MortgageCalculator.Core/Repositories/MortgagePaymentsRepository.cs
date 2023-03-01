@@ -36,11 +36,10 @@ public class MortgagePaymentsRepository : MongoRepositoryBase, IMortgagePayments
 	public async Task<IEnumerable<MortgagePayment>> PaymentsInMonth(DateOnly date)
 	{
 		var (firstOfMonth, lastOfMonth) = date.FirstAndLastDaysOfMonth();
-
 		return await GetFilteredFromCollection(_collectionName, DateRangePredicate(firstOfMonth, lastOfMonth));
-	}
+    }
 
-	private static Expression<Func<MortgagePayment, bool>> DateRangePredicate(DateOnly from, DateOnly to)
+    private static Expression<Func<MortgagePayment, bool>> DateRangePredicate(DateOnly from, DateOnly to)
 	{
 		return (mp) => mp.PaidOn >= from && mp.PaidOn <= to;
 	}

@@ -8,14 +8,12 @@ namespace MortgageCalculator.Core.Services;
 public class MortgageForecaster : IMortgageForecaster
 {
     private readonly IMongoRepository<Mortgage> _mortgagesRepo;
-    private readonly IMortgagePaymentsRepository _mortgagePaymentsRepo;
-    private readonly IPublicHolidayChecker _publicHolidayService;
+    private readonly IMortgagePayments _mortgagePayments;
 
-    public MortgageForecaster(IMongoRepository<Mortgage> mortgagesRepo, IMortgagePaymentsRepository mortgagePaymentsRepo, IPublicHolidayChecker publicHolidayService)
+    public MortgageForecaster(IMongoRepository<Mortgage> mortgagesRepo, IMortgagePayments mortgagePayments)
     {
         _mortgagesRepo = mortgagesRepo;
-        _mortgagePaymentsRepo = mortgagePaymentsRepo;
-        _publicHolidayService = publicHolidayService;
+        _mortgagePayments = mortgagePayments;
     }
 
     public async Task<DetailedForecast> GetDetailedForecast()
@@ -30,7 +28,7 @@ public class MortgageForecaster : IMortgageForecaster
         var forecast = new DetailedForecast();
         while (amountToPayoff > 0m)
         {
-            var paymentsInMonth = (await _mortgagePaymentsRepo.PaymentsInMonth(currentDate)).ToList();
+            var paymentsInMonth = (await _mortgagePayments.PaymentsForMonth(mortgage, currentDate, amountToPayoff)).ToArray();
             var forecastForMonth = ForecastNextMonth(ref amountToPayoff, currentDate, mortgage, paymentsInMonth);
 
             if (monthToMonthCarryOver > 0)
@@ -54,18 +52,12 @@ public class MortgageForecaster : IMortgageForecaster
         return forecast;
     }
 
-    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, List<MortgagePayment> payments)
+    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, MortgagePayment[] payments)
     {
         var house = mortgage.House ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
+
         var interestPeriod = mortgage.InterestPeriods
             .SingleOrDefault(ip => ip.From <= date && date <= ip.To, mortgage.InterestPeriods.Last());
-
-        var paymentDate = DeterminePaymentDate(date);
-        if (paymentDate == mortgage.FirstPaymentDate)
-            payments.Add(new MortgagePayment { Amount = mortgage.FirstPaymentAmount, PaidOn = paymentDate });
-        else if (date > mortgage.FirstPaymentDate)
-            payments.Add(new MortgagePayment { Amount = interestPeriod.MonthlyPayment, PaidOn = paymentDate });
-
         var (interestForMonth, interestPerDay) = CalculateDailyInterestForMonth(amountToPayOff, date, interestPeriod, payments);
 
         var forecastForMonth = new DetailedForecastMonth();
@@ -96,7 +88,7 @@ public class MortgageForecaster : IMortgageForecaster
         return forecastForMonth;
     }
 
-    private (decimal ForMonth, decimal ForDay) CalculateDailyInterestForMonth(decimal balance, DateOnly interestStart, InterestPeriod interestPeriod, List<MortgagePayment> payments)
+    private (decimal ForMonth, decimal ForDay) CalculateDailyInterestForMonth(decimal balance, DateOnly interestStart, InterestPeriod interestPeriod, MortgagePayment[] payments)
     {
         var daysInMonth = (interestStart.DaysInMonth() - interestStart.Day) + 1;
         var interestFraction = (interestPeriod.InterestRate / 100m);
@@ -112,15 +104,5 @@ public class MortgageForecaster : IMortgageForecaster
         var forDay = Math.Round(forMonth / (decimal)daysInMonth, 2, MidpointRounding.ToEven);
 
         return (forMonth, forDay);
-    }
-
-    private DateOnly DeterminePaymentDate(DateOnly date)
-    {
-        date = new DateOnly(date.Year, date.Month, 1);
-
-        while (date.IsWeekend() || _publicHolidayService.IsBankHoliday(date))
-            date = date.AddDays(1);
-
-        return date;
     }
 }

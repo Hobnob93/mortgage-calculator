@@ -9,11 +9,13 @@ public class MortgageForecaster : IMortgageForecaster
 {
     private readonly IMongoRepository<Mortgage> _mortgagesRepo;
     private readonly IMortgagePayments _mortgagePayments;
+    private readonly IInterestCalculator _interestCalculator;
 
-    public MortgageForecaster(IMongoRepository<Mortgage> mortgagesRepo, IMortgagePayments mortgagePayments)
+    public MortgageForecaster(IMongoRepository<Mortgage> mortgagesRepo, IMortgagePayments mortgagePayments, IInterestCalculator interestCalculator)
     {
         _mortgagesRepo = mortgagesRepo;
         _mortgagePayments = mortgagePayments;
+        _interestCalculator = interestCalculator;
     }
 
     public async Task<DetailedForecast> GetDetailedForecast()
@@ -54,13 +56,12 @@ public class MortgageForecaster : IMortgageForecaster
 
     private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, MortgagePayment[] payments)
     {
-        var house = mortgage.House ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
+        var house = mortgage.House
+            ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
 
-        var interestPeriod = mortgage.InterestPeriods
-            .SingleOrDefault(ip => ip.From <= date && date <= ip.To, mortgage.InterestPeriods.Last());
-        var (interestForMonth, interestPerDay) = CalculateDailyInterestForMonth(amountToPayOff, date, interestPeriod, payments);
-
+        var (interestForMonth, interestPerDay) = _interestCalculator.CalculateInterestForMonth(amountToPayOff, date, mortgage, payments);
         var forecastForMonth = new DetailedForecastMonth();
+
         for (var i = date.Day; i <= date.DaysInMonth(); i++)
         {
             date = new DateOnly(date.Year, date.Month, i);
@@ -82,27 +83,8 @@ public class MortgageForecaster : IMortgageForecaster
             });
         }
 
-        forecastForMonth.TMP_CompareMonthInterest = interestForMonth;
         amountToPayOff += interestForMonth;
 
         return forecastForMonth;
-    }
-
-    private (decimal ForMonth, decimal ForDay) CalculateDailyInterestForMonth(decimal balance, DateOnly interestStart, InterestPeriod interestPeriod, MortgagePayment[] payments)
-    {
-        var daysInMonth = (interestStart.DaysInMonth() - interestStart.Day) + 1;
-        var interestFraction = (interestPeriod.InterestRate / 100m);
-        var baseAmount = Math.Round(balance * interestFraction * daysInMonth, 4, MidpointRounding.ToEven);
-
-        var paymentDeductions = 0m;
-        foreach (var payment in payments)
-        {
-            paymentDeductions += Math.Round(payment.Amount * interestFraction * (daysInMonth - payment.PaidOn.Day + 1), 4, MidpointRounding.ToEven);
-        }
-
-        var forMonth = Math.Round((baseAmount - paymentDeductions) / (decimal)interestStart.DaysInYear(), 2, MidpointRounding.ToEven);
-        var forDay = Math.Round(forMonth / (decimal)daysInMonth, 2, MidpointRounding.ToEven);
-
-        return (forMonth, forDay);
     }
 }

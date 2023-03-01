@@ -2,7 +2,6 @@
 
 public class DetailedForecastMonth
 {
-    public decimal TMP_CompareMonthInterest { get; set; }
     public List<DetailedForecastDay> Days { get; set; } = new();
 
     public DateOnly From => Days.First().Date;

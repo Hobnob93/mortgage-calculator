@@ -25,7 +25,7 @@ public class MortgageController : ControllerBase
         {
             EstimatedValue = house.EstimatedValue,
             PurchaseValue = house.PurchasedValue,
-            Equity = house.EstimatedValue - house.PurchasedValue,
+            Equity = house.EstimatedValue - mortgage.AmountBorrowed,    // TODO: needs to be based on current amount owed
             PercentageDifference = (double)(((house.EstimatedValue - house.PurchasedValue) / house.PurchasedValue) * 100m)
         };
     }

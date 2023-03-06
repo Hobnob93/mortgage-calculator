@@ -2,35 +2,34 @@
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Documents;
 
-namespace MortgageCalculator.WebApi.Controllers
+namespace MortgageCalculator.WebApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class UsefulLinksController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UsefulLinksController : ControllerBase
+    private readonly IMongoRepository<UsefulLink> _linkRepo;
+
+    public UsefulLinksController(IMongoRepository<UsefulLink> mortgageRepo)
     {
-        private readonly IMongoRepository<UsefulLink> _linkRepo;
+        _linkRepo = mortgageRepo;
+    }
 
-        public UsefulLinksController(IMongoRepository<UsefulLink> mortgageRepo)
-        {
-            _linkRepo = mortgageRepo;
-        }
+    [HttpGet(Name = "GetUsefulLinks")]
+    public async Task<IEnumerable<UsefulLink>> Get()
+    {
+        return await _linkRepo.GetAll();
+    }
 
-        [HttpGet(Name = "GetUsefulLinks")]
-        public async Task<IEnumerable<UsefulLink>> Get()
-        {
-            return await _linkRepo.GetAll();
-        }
+    [HttpPatch(Name = "UpdateUsefulLink")]
+    public async Task Patch([FromBody] UsefulLink link)
+    {
+        await _linkRepo.UpdateDocument(link);
+    }
 
-        [HttpPatch(Name = "UpdateUsefulLink")]
-        public async Task Patch([FromBody] UsefulLink link)
-        {
-            await _linkRepo.UpdateDocument(link);
-        }
-
-        [HttpDelete(Name = "DeleteUsefulLink")]
-        public async Task Delete([FromBody] UsefulLink link)
-        {
-            await _linkRepo.DeleteDocument(link);
-        }
+    [HttpDelete(Name = "DeleteUsefulLink")]
+    public async Task Delete([FromBody] UsefulLink link)
+    {
+        await _linkRepo.DeleteDocument(link);
     }
 }

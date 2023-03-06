@@ -1,12 +1,19 @@
 ﻿<MudCard Style="@CardStyling" Class="@CardClasses">
-    <MudCardHeader>
+    <MudCardHeader Class="@CardHeaderClasses">
         <CardHeaderContent>
-            <MudText Typo="Typo.h5">@Title</MudText>
+            <MudText Typo="Typo.h4">@Title</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent Class="@CardContentClasses">
         <MudPaper Elevation="0">
-            @ChildContent
+            @if (ChildContent is null || IsLoading)
+            {
+                <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+            }
+            else
+            {
+                @ChildContent
+            }
         </MudPaper>
     </MudCardContent>
 </MudCard>

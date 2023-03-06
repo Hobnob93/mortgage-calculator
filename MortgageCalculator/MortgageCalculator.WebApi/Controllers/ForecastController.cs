@@ -2,23 +2,22 @@
 using MortgageCalculator.Core.Interfaces;
 using MortgageCalculator.Core.Models;
 
-namespace MortgageCalculator.WebApi.Controllers
+namespace MortgageCalculator.WebApi.Controllers;
+
+[ApiController]
+[Route("[controller]/[action]")]
+public class ForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]/[action]")]
-    public class ForecastController : ControllerBase
+    private readonly IMortgageForecaster _forecaster;
+
+    public ForecastController(IMortgageForecaster forecaster)
     {
-        private readonly IMortgageForecaster _forecaster;
+        _forecaster = forecaster;
+    }
 
-        public ForecastController(IMortgageForecaster forecaster)
-        {
-            _forecaster = forecaster;
-        }
-
-        [HttpGet]
-        public async Task<DetailedForecast> Detailed()
-        {
-            return await _forecaster.GetDetailedForecast();
-        }
+    [HttpGet]
+    public async Task<DetailedForecast> Detailed()
+    {
+        return await _forecaster.GetDetailedForecast();
     }
 }

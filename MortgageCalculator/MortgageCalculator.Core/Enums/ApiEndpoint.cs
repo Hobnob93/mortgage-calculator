@@ -2,6 +2,7 @@
 
 public enum ApiEndpoint
 {
+    DetailedForecast,
+    HouseValue,
     UsefulLinks,
-    DetailedForecast
 }

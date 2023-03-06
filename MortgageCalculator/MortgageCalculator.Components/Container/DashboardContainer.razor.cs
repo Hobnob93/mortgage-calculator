@@ -12,8 +12,11 @@ public partial class DashboardContainer : ComponentBase
     [Parameter, EditorRequired]
     public string Title { get; set; } = default!;
 
-    [Parameter, EditorRequired]
-    public RenderFragment ChildContent { get; set; } = default!;
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
 
     [Parameter]
     public VerticalHeight VerticalHeight { get; set; } = VerticalHeight.Auto;
@@ -32,5 +35,10 @@ public partial class DashboardContainer : ComponentBase
         .Add("align-center")
         .Add("justify-center")
         .Add("flex-1")
+        .Add("pt-2")
+        .Build();
+
+    private string CardHeaderClasses => HtmlBuilderFactory.NewClassBuilder()
+        .Add("pb-2")
         .Build();
 }

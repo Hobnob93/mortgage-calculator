@@ -7,13 +7,13 @@ namespace MortgageCalculator.Core.Services;
 
 public class MortgageForecaster : IMortgageForecaster
 {
-    private readonly IMongoRepository<Mortgage> _mortgagesRepo;
+    private readonly IMortgageRepository _mortgageRepo;
     private readonly IMortgagePayments _mortgagePayments;
     private readonly IInterestCalculator _interestCalculator;
 
-    public MortgageForecaster(IMongoRepository<Mortgage> mortgagesRepo, IMortgagePayments mortgagePayments, IInterestCalculator interestCalculator)
+    public MortgageForecaster(IMortgageRepository mortgageRepo, IMortgagePayments mortgagePayments, IInterestCalculator interestCalculator)
     {
-        _mortgagesRepo = mortgagesRepo;
+        _mortgageRepo = mortgageRepo;
         _mortgagePayments = mortgagePayments;
         _interestCalculator = interestCalculator;
     }
@@ -21,7 +21,7 @@ public class MortgageForecaster : IMortgageForecaster
     public async Task<DetailedForecast> GetDetailedForecast()
     {
         // TODO: find mortgage based on forecast start-from date, otherwise use start of FIRST mortgage - need to order by mortgage opened date if multiple mortgages exist
-        var mortgage = (await _mortgagesRepo.GetAll()).First();
+        var mortgage = await _mortgageRepo.GetFirstMortgage();
 
         var currentDate = mortgage.Opened;
         var amountToPayoff = mortgage.AmountBorrowed;

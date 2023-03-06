@@ -1,29 +1,63 @@
 ﻿@inherits ApiComponentBase
 
 <MudGrid>
-    <MudItem sm="12" md="4">
-        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="Remaining Loan">
-            Remaining Loan Content
+    <MudItem xs="12" sm="12" md="6" lg="4">
+        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="Remaining Loan"></DashboardContainer>
+    </MudItem>
+
+    <MudItem xs="12" sm="12" md="6" lg="4">
+        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="House Value" IsLoading="houseValue is null">
+            @if (houseValue is not null)
+            {
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
+                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.PurchaseValue.ToString("n0")</MudText>
+                            <MudText Typo="Typo.caption">Purchased For</MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
+                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.EstimatedValue.ToString("n0")</MudText>
+                            <MudText Typo="Typo.caption">Estimated Value</MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
+                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.Equity.ToString("n0")</MudText>
+                            <MudText Typo="Typo.caption">Estimated Equity</MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
+                            @if (houseValue.PercentageDifference >= 0)
+                            {
+                                <MudText Typo="Typo.h4" Color="Color.Success">@houseValue.PercentageDifference.ToString("0.00")%</MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.h4" Color="Color.Error">@houseValue.PercentageDifference.ToString("0.00")%</MudText>
+                            }                            
+                            <MudText Typo="Typo.caption">House Price Change</MudText>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            }
         </DashboardContainer>
     </MudItem>
-    <MudItem sm="12" md="4">
-        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="Estimated House Value">
-            Estimated House Value Cointent
-        </DashboardContainer>
+
+    <MudItem xs="12" sm="12" md="6" lg="4">
+        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="Loan To Value"></DashboardContainer>
     </MudItem>
-    <MudItem sm="12" md="4">
-        <DashboardContainer VerticalHeight="VerticalHeight._35" Title="LTV %">
-            LTV % Content
-        </DashboardContainer>
+
+    <MudItem xs="12" sm="12" md="6">
+        <DashboardContainer VerticalHeight="VerticalHeight._50" Title="Loan Over Time"></DashboardContainer>
     </MudItem>
-    <MudItem sm="12" md="6">
-        <DashboardContainer VerticalHeight="VerticalHeight._50" Title="Loan Over Time">
-            Graph: loan amount over time
-        </DashboardContainer>
-    </MudItem>
-    <MudItem sm="12" md="6">
-        <DashboardContainer VerticalHeight="VerticalHeight._50" Title="LTV Over Time">
-            Graph: LTV over time
-        </DashboardContainer>
+
+    <MudItem xs="12" sm="12" md="6">
+        <DashboardContainer VerticalHeight="VerticalHeight._50" Title="LTV Over Time"></DashboardContainer>
     </MudItem>
 </MudGrid>

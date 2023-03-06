@@ -27,10 +27,11 @@ builder.Services.AddTransient(s =>
 
 builder.Services.AddTransient<ISeedRepositoryData, SeedRepositoryData>();
 builder.Services.AddTransient<IMongoRepository<UsefulLink>, UsefulLinksRepository>();
-builder.Services.AddTransient<IMongoRepository<Mortgage>, MortgagesRepository>();
 builder.Services.AddTransient<IMongoRepository<MortgagePayment>, MortgagePaymentsRepository>();
+builder.Services.AddTransient<IMongoRepository<Mortgage>, MortgageRepository>();
 
 builder.Services.AddTransient<IMortgagePaymentsRepository, MortgagePaymentsRepository>();
+builder.Services.AddTransient<IMortgageRepository, MortgageRepository>();
 
 builder.Services.AddTransient<IInterestCalculator, InterestCalculator>();
 builder.Services.AddTransient<IMortgagePayments, MortgagePayments>();

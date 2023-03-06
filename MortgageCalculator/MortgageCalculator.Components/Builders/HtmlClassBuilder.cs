@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MortgageCalculator.Components.Builders;
 
-public class HtmlClassBuilder : IValueListBuilder<string, string>
+public struct HtmlClassBuilder : IValueListBuilder<string, string>
 {
     private const char SeparatorChar = ' ';
 

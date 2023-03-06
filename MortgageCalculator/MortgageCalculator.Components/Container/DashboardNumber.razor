@@ -1,0 +1,16 @@
+﻿<MudItem xs="@ItemSize" Class="pa-1">
+    <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
+        <MudPaper Class="pa-0" Elevation="0">
+            @if (!string.IsNullOrEmpty(LeadingText))
+            {
+                <MudText Typo="Typo.h4" Inline>@LeadingText</MudText>
+            }
+            <MudText Typo="Typo.h4" Color="@Color" Inline>@ValueAsString</MudText>
+            @if (!string.IsNullOrEmpty(TrailingText))
+            {
+                <MudText Typo="Typo.h4" Inline>@TrailingText</MudText>
+            }
+        </MudPaper>
+        <MudText Typo="Typo.caption">@Caption</MudText>
+    </MudPaper>
+</MudItem>

@@ -10,40 +10,11 @@
             @if (houseValue is not null)
             {
                 <MudGrid>
-                    <MudItem xs="12">
-                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
-                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.PurchaseValue.ToString("n0")</MudText>
-                            <MudText Typo="Typo.caption">Purchased For</MudText>
-                        </MudPaper>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
-                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.EstimatedValue.ToString("n0")</MudText>
-                            <MudText Typo="Typo.caption">Estimated Value</MudText>
-                        </MudPaper>
-                    </MudItem>
-
-                    <MudItem xs="6">
-                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
-                            <MudText Typo="Typo.h4" Color="Color.Info">£@houseValue.Equity.ToString("n0")</MudText>
-                            <MudText Typo="Typo.caption">Estimated Equity</MudText>
-                        </MudPaper>
-                    </MudItem>
-
-                    <MudItem xs="6">
-                        <MudPaper Class="d-flex align-center justify-center flex-column" Elevation="0">
-                            @if (houseValue.PercentageDifference >= 0)
-                            {
-                                <MudText Typo="Typo.h4" Color="Color.Success">@houseValue.PercentageDifference.ToString("0.00")%</MudText>
-                            }
-                            else
-                            {
-                                <MudText Typo="Typo.h4" Color="Color.Error">@houseValue.PercentageDifference.ToString("0.00")%</MudText>
-                            }                            
-                            <MudText Typo="Typo.caption">House Price Change</MudText>
-                        </MudPaper>
-                    </MudItem>
+                    <DashboardNumber ItemSize="12" ColorCode="ColorCode.Neutral" LeadingText="£" ValueAsString="@houseValue.PurchaseValue.ToString("n0")" Caption="Purchased For"/>
+                    <DashboardNumber ItemSize="12" ColorCode="ColorCode.Neutral" LeadingText="£" ValueAsString="@houseValue.EstimatedValue.ToString("n0")" Caption="Estimated Value"/>
+                    <DashboardNumber ItemSize="6" ColorCode="ColorCode.Neutral" LeadingText="£" ValueAsString="@houseValue.Equity.ToString("n0")" Caption="Estimated Equity" />
+                    <DashboardNumber ItemSize="6" TrailingText="%" ValueAsString="@houseValue.PercentageDifference.ToString("0.00")" Caption="House Price Change"
+                        ColorCode="@(houseValue.PercentageDifference >= 0 ? ColorCode.Good : ColorCode.Bad)" />
                 </MudGrid>
             }
         </DashboardContainer>

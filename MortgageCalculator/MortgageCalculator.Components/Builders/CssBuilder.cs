@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MortgageCalculator.Components.Builders;
 
-public class CssBuilder : IKeyValuePairBuilder<string, string, string>
+public struct CssBuilder : IKeyValuePairBuilder<string, string, string>
 {
     private const char KvSeparatorChar = ':';
     private const char KvpSeparatorChar = ' ';

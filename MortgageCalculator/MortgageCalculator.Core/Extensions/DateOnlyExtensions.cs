@@ -20,6 +20,13 @@ public static class DateOnlyExtensions
         return (firstOfMonth, lastOfMonth);
     }
 
+    public static DateOnly LastDayOfMonth(this DateOnly date)
+    {
+        var (_, lastDay) = date.FirstAndLastDaysOfMonth();
+
+        return lastDay;
+    }
+
     public static DateOnly StartOfNextMonth(this DateOnly thisMonth)
     {
         return thisMonth

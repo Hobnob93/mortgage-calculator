@@ -8,11 +8,13 @@ namespace MortgageCalculator.WebApi.Controllers;
 [Route("[controller]/[action]")]
 public class MortgageController : ControllerBase
 {
+    private readonly IMortgageForecaster _mortgageForecaster;
     private readonly IMortgageRepository _mortgageRepo;
 
-    public MortgageController(IMortgageRepository mortgageRepo)
+    public MortgageController(IMortgageRepository mortgageRepo, IMortgageForecaster mortgageForecaster)
     {
         _mortgageRepo = mortgageRepo;
+        _mortgageForecaster = mortgageForecaster;
     }
 
     [HttpGet]
@@ -20,12 +22,13 @@ public class MortgageController : ControllerBase
     {
         var mortgage = await _mortgageRepo.GetMostRecentMortgage();
         var house = mortgage.House ?? throw new InvalidOperationException("Most recent mortgage has no associated house!");
+        var simpleForecast = await _mortgageForecaster.GetSimpleForecast(DateOnly.FromDateTime(DateTime.Now));
 
         return new EstimatedHouseValue
         {
             EstimatedValue = house.EstimatedValue,
             PurchaseValue = house.PurchasedValue,
-            Equity = house.EstimatedValue - mortgage.AmountBorrowed,    // TODO: needs to be based on current amount owed
+            Equity = house.EstimatedValue - simpleForecast.Balance,
             PercentageDifference = (double)(((house.EstimatedValue - house.PurchasedValue) / house.PurchasedValue) * 100m)
         };
     }

@@ -18,50 +18,81 @@ public class MortgageForecaster : IMortgageForecaster
         _interestCalculator = interestCalculator;
     }
 
-    public async Task<DetailedForecast> GetDetailedForecast()
+    public async Task<DetailedForecast> GetDetailedForecast(DateOnly? forecastUpTo = null)
     {
         // TODO: find mortgage based on forecast start-from date, otherwise use start of FIRST mortgage - need to order by mortgage opened date if multiple mortgages exist
         var mortgage = await _mortgageRepo.GetFirstMortgage();
-
-        var currentDate = mortgage.Opened;
-        var amountToPayoff = mortgage.AmountBorrowed;
-        var monthToMonthCarryOver = 0m;
+        var forecastData = new ForecastData
+        {
+            Mortgage = mortgage,
+            AmountToPayOff = mortgage.AmountBorrowed,
+            CurrentForecastDate = mortgage.Opened,
+            ForecastTo = forecastUpTo
+        };
 
         var forecast = new DetailedForecast();
-        while (amountToPayoff > 0m)
+        var monthToMonthCarryOver = 0m;
+        while (forecastData.AmountToPayOff > 0m)
         {
-            var paymentsInMonth = (await _mortgagePayments.PaymentsForMonth(mortgage, currentDate, amountToPayoff)).ToArray();
-            var forecastForMonth = ForecastNextMonth(ref amountToPayoff, currentDate, mortgage, paymentsInMonth);
+            if (forecastUpTo is not null && forecastData.CurrentForecastDate > forecastUpTo)
+                break;
+
+            var paymentsInMonth = (await _mortgagePayments.PaymentsForMonth(forecastData)).ToArray();
+            var forecastForMonth = ForecastNextMonth(ref forecastData, paymentsInMonth);
 
             if (monthToMonthCarryOver > 0)
             {
-                amountToPayoff += monthToMonthCarryOver;
+                forecastData = forecastData with
+                {
+                    AmountToPayOff = forecastData.AmountToPayOff + monthToMonthCarryOver,
+                };
                 monthToMonthCarryOver = 0m;
             }
 
             if (forecast.Months.Count == 0 && forecastForMonth.To < mortgage.FirstPaymentDate)
             {
                 // Undo adding interest in first month as first payment not been done yet
-                amountToPayoff -= forecastForMonth.PaidOut;
+                forecastData = forecastData with
+                {
+                    AmountToPayOff = forecastData.AmountToPayOff - forecastForMonth.PaidOut
+                };
                 monthToMonthCarryOver = forecastForMonth.PaidOut;
             }
 
             forecast.Months.Add(forecastForMonth);
 
-            currentDate = currentDate.StartOfNextMonth();
+            forecastData = forecastData with
+            {
+                CurrentForecastDate = forecastData.CurrentForecastDate.StartOfNextMonth(),
+            };
         }
 
         return forecast;
     }
 
-    private DetailedForecastMonth ForecastNextMonth(ref decimal amountToPayOff, DateOnly date, Mortgage mortgage, MortgagePayment[] payments)
+    public async Task<SimpleForecast> GetSimpleForecast(DateOnly date)
     {
-        var house = mortgage.House
-            ?? throw new InvalidDataException($"The mortgage '{mortgage.Id}' doesn't contain any house data!");
+        var detailedForecast = await GetDetailedForecast(date);
 
-        var (interestForMonth, interestPerDay) = _interestCalculator.CalculateInterestForMonth(amountToPayOff, date, mortgage, payments);
+        return new SimpleForecast
+        {
+            Date = detailedForecast.To,
+            Balance = detailedForecast.FinalBalance,
+            LoanToValue = detailedForecast.FinalLoanToValue,
+            PaidInToDate = detailedForecast.TotalPaidIn,
+            PaidOutToDate = detailedForecast.TotalPaidOut
+        };
+    }
+
+    private DetailedForecastMonth ForecastNextMonth(ref ForecastData forecastData, MortgagePayment[] payments)
+    {
+        var house = forecastData.Mortgage.House
+            ?? throw new InvalidDataException($"The mortgage '{forecastData.Mortgage.Id}' doesn't contain any house data!");
+
+        var (interestForMonth, interestPerDay) = _interestCalculator.CalculateInterestForMonth(forecastData, payments);
         var forecastForMonth = new DetailedForecastMonth();
 
+        var date = forecastData.CurrentForecastDate;
         for (var i = date.Day; i <= date.DaysInMonth(); i++)
         {
             date = new DateOnly(date.Year, date.Month, i);
@@ -71,19 +102,30 @@ public class MortgageForecaster : IMortgageForecaster
                 .Sum(p => p.Amount);
 
             if (payment > 0m)
-                amountToPayOff -= payment;
+            {
+                forecastData = forecastData with
+                {
+                    AmountToPayOff = forecastData.AmountToPayOff - payment,
+                };
+            }
 
             forecastForMonth.Days.Add(new DetailedForecastDay
             {
                 Date = date,
                 PaidIn = payment,
                 PaidOut = interestPerDay,
-                Balance = amountToPayOff,
-                LoanToValue = (double)((amountToPayOff / house.EstimatedValue) * 100m)
+                Balance = forecastData.AmountToPayOff,
+                LoanToValue = (double)((forecastData.AmountToPayOff / house.EstimatedValue) * 100m)
             });
+
+            if (forecastData.ForecastTo is not null && date == forecastData.ForecastTo)
+                break;
         }
 
-        amountToPayOff += interestForMonth;
+        forecastData = forecastData with
+        {
+            AmountToPayOff = forecastData.AmountToPayOff + interestForMonth
+        };
 
         return forecastForMonth;
     }

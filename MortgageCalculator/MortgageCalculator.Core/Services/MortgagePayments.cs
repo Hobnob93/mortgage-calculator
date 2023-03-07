@@ -1,6 +1,7 @@
 ﻿using MortgageCalculator.Core.Documents;
 using MortgageCalculator.Core.Extensions;
 using MortgageCalculator.Core.Interfaces;
+using MortgageCalculator.Core.Models;
 
 namespace MortgageCalculator.Core.Services;
 
@@ -15,8 +16,10 @@ public class MortgagePayments : IMortgagePayments
         _publicHolidays = publicHolidays;
     }
 
-    public async Task<IEnumerable<MortgagePayment>> PaymentsForMonth(Mortgage mortgage, DateOnly date, decimal amountLeftToPay)
+    public async Task<IEnumerable<MortgagePayment>> PaymentsForMonth(ForecastData forecastData)
     {
+        var mortgage = forecastData.Mortgage;
+        var date = forecastData.CurrentForecastDate;
         var payments = (await _paymentsRepo.PaymentsInMonth(date)).ToList();
 
         var paymentDate = DeterminePaymentDate(date);
@@ -29,6 +32,7 @@ public class MortgagePayments : IMortgagePayments
             var interestPeriod = mortgage.InterestPeriods
                 .SingleOrDefault(ip => ip.From <= date && date <= ip.To, mortgage.InterestPeriods.Last());
 
+            var amountLeftToPay = forecastData.AmountToPayOff;
             var paymentAmount = amountLeftToPay > interestPeriod.MonthlyPayment
                 ? interestPeriod.MonthlyPayment
                 : amountLeftToPay;

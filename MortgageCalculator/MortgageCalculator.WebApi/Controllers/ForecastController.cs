@@ -20,4 +20,10 @@ public class ForecastController : ControllerBase
     {
         return await _forecaster.GetDetailedForecast();
     }
+
+    [HttpGet]
+    public async Task<SimpleForecast> Simple()
+    {
+        return await _forecaster.GetSimpleForecast(DateOnly.FromDateTime(DateTime.Now));
+    }
 }
